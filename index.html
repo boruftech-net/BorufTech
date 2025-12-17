@@ -1,0 +1,4925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BorufTech - Build Your Future</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Pyodide for Python in browser -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <!-- React for frontend -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,om,am',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  
+  <style>
+    /* ========== CSS VARIABLES ========== */
+    :root {
+      --primary-blue: #007bff;
+      --secondary-blue: #0056b3;
+      --accent-teal: #00bcd4;
+      --success-green: #28a745;
+      --warning-yellow: #ffc107;
+      --danger-red: #dc3545;
+      --dark-gray: #343a40;
+      --light-gray: #f8f9fa;
+      --medium-gray: #6c757d;
+      --purple-tech: #6f42c1;
+      --python-green: #4CAF50;
+      --react-blue: #61dafb;
+      
+      --primary-color: var(--primary-blue);
+      --secondary-color: var(--secondary-blue);
+      --accent-color: var(--accent-teal);
+      --background-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      --section-bg: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --text-color: #f0f0f0;
+      --header-bg: rgba(15, 12, 41, 0.95);
+      --hover-glow: rgba(0, 123, 255, 0.4);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    /* ========== LIGHT THEME ========== */
+    body.light {
+      --background-gradient: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fce4ec 100%);
+      --section-bg: rgba(0, 0, 0, 0.03);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #333;
+      --header-bg: rgba(255, 255, 255, 0.97);
+      --hover-glow: rgba(0, 123, 255, 0.15);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    /* ========== BASE STYLES ========== */
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body { 
+      line-height: 1.6;
+      background: var(--background-gradient);
+      background-size: 400% 400%;
+      animation: gradientFlow 30s ease infinite;
+      color: var(--text-color);
+      transition: all 0.4s ease;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* ========== LOADING ANIMATION ========== */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--background-gradient);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255,255,255,0.1);
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    .loader p {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* ========== NAVBAR ========== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background-color: var(--header-bg);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      border-bottom: 2px solid rgba(0, 123, 255, 0.3);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 4px 30px var(--shadow-color);
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+      padding: 10px 40px;
+      box-shadow: 0 10px 30px var(--shadow-color);
+    }
+    
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .navbar .logo img {
+      width: 150px;
+      height: 50px;
+      transition: transform 0.3s;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    }
+    
+    .navbar .logo img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* ========== NAVIGATION LINKS ========== */
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+    
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      position: relative;
+      padding: 5px 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .nav-links li a i {
+      font-size: 0.9rem;
+    }
+    
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-color);
+      transition: width 0.3s;
+    }
+    
+    .nav-links li a:hover::after,
+    .nav-links li a.active::after {
+      width: 100%;
+    }
+    
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: var(--primary-color);
+    }
+    
+    /* ========== HAMBURGER MENU ========== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(0, 123, 255, 0.15);
+      z-index: 1001;
+    }
+    
+    .hamburger:hover {
+      transform: scale(1.1);
+      background: rgba(0, 123, 255, 0.25);
+    }
+    
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background-color: white;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+      background-color: var(--primary-color);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+      background-color: var(--primary-color);
+    }
+    
+    /* ========== RESPONSIVE NAVIGATION ========== */
+    @media (max-width: 1024px) {
+      .nav-links {
+        gap: 20px;
+      }
+      
+      .nav-links li a {
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 12px 25px;
+      }
+      
+      .nav-links {
+        position: fixed;
+        top: 100px;
+        right: -100%;
+        background-color: var(--header-bg);
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        padding: 30px;
+        transition: right 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        border-radius: 0 0 0 20px;
+        backdrop-filter: blur(20px);
+        box-shadow: -5px 5px 30px var(--shadow-color);
+        height: calc(100vh - 100px);
+        overflow-y: auto;
+        z-index: 998;
+      }
+      
+      .nav-links.active {
+        right: 0;
+      }
+      
+      .nav-links li {
+        width: 100%;
+        text-align: left;
+      }
+      
+      .nav-links li a {
+        display: flex;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 10px;
+        align-items: center;
+      }
+      
+      .nav-links li a:hover {
+        background: rgba(0, 123, 255, 0.2);
+        transform: translateX(10px);
+      }
+      
+      .nav-links li a::after {
+        display: none;
+      }
+      
+      .hamburger {
+        display: flex;
+      }
+      
+      /* Overlay when menu is open */
+      .nav-overlay {
+        display: none;
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 100px);
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 997;
+      }
+      
+      .nav-overlay.active {
+        display: block;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+      
+      .navbar .logo img {
+        width: 160px;
+        height: 56px;
+      }
+      
+      .nav-links {
+        max-width: 280px;
+        padding: 25px;
+      }
+    }
+    
+    /* ========== HERO SECTION ========== */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(0, 188, 212, 0.1) 0%, transparent 50%);
+      z-index: 0;
+    }
+    
+    .hero-content {
+      max-width: 900px;
+      z-index: 1;
+      position: relative;
+    }
+    
+    .hero-content h1 {
+      font-size: 4rem;
+      margin-bottom: 25px;
+      background: linear-gradient(to right, var(--warning-yellow), var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: fadeInUp 1s ease;
+      font-weight: 800;
+      line-height: 1.1;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .hero-content p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      color: #e0e0e0;
+      animation: fadeInUp 1s ease 0.2s both;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    body.light .hero-content p {
+      color: #555;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 25px;
+      justify-content: center;
+      animation: fadeInUp 1s ease 0.4s both;
+      flex-wrap: wrap;
+    }
+    
+    /* ========== BUTTONS ========== */
+    .btn {
+      padding: 16px 36px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.7s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px var(--hover-glow);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid var(--primary-color);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--primary-color);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px var(--hover-glow);
+    }
+    
+    body.light .btn-secondary {
+      color: #333;
+    }
+    
+    /* ========== SECTIONS ========== */
+    section {
+      background-color: var(--section-bg);
+      backdrop-filter: blur(20px);
+      padding: 100px 30px;
+      border-radius: 25px;
+      margin: 50px auto;
+      max-width: 1200px;
+      box-shadow: 0 15px 50px var(--shadow-color);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,123,255,0.05) 0%, transparent 70%);
+      z-index: 0;
+    }
+    
+    section > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 3.2rem;
+      margin-bottom: 70px;
+      color: white;
+      position: relative;
+      font-weight: 800;
+    }
+    
+    body.light .section-title {
+      color: #222;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      border-radius: 3px;
+    }
+    
+    /* ========== TECH EDUCATION SECTION ========== */
+    .tech-education {
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(108, 66, 193, 0.1));
+      border: 1px solid rgba(0, 123, 255, 0.2);
+    }
+    
+    .tech-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tech-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    }
+    
+    .tech-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: var(--primary-color);
+    }
+    
+    .tech-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .tech-icon {
+      font-size: 3.5rem;
+      color: var(--primary-color);
+      background: rgba(0, 123, 255, 0.1);
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: transform 0.5s;
+    }
+    
+    .tech-card:hover .tech-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .tech-title {
+      font-size: 2.2rem;
+      color: white;
+      margin: 0;
+      font-weight: 700;
+    }
+    
+    body.light .tech-title {
+      color: #222;
+    }
+    
+    .tech-intro {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 25px;
+      color: #e0e0e0;
+    }
+    
+    body.light .tech-intro {
+      color: #555;
+    }
+    
+    /* ========== CODE EDITOR STYLES ========== */
+    .code-editor-container {
+      margin: 25px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .code-header {
+      background: #282c34;
+      color: #abb2bf;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      border-bottom: 1px solid #3e4451;
+    }
+    
+    .language-tag {
+      background: #61afef;
+      color: #282c34;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    
+    .code-editor {
+      background: #282c34;
+      color: #abb2bf;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95em;
+      line-height: 1.5;
+      overflow-x: auto;
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      tab-size: 2;
+    }
+    
+    .run-button {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 15px 0;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .run-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+    }
+    
+    .run-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    .output-area {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border: 2px solid #3e4451;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .output-area.success {
+      border-color: #4CAF50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .output-area.error {
+      border-color: #f44336;
+      background: rgba(244, 67, 54, 0.1);
+    }
+    
+    /* ========== PYTHON SPECIFIC STYLES ========== */
+    .python-output {
+      background: rgba(76, 175, 80, 0.1);
+      border-left: 4px solid var(--python-green);
+    }
+    
+    /* ========== REACT SPECIFIC STYLES ========== */
+    .react-demo-area {
+      background: rgba(97, 218, 251, 0.1);
+      border: 2px solid var(--react-blue);
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    
+    /* ========== FEATURE GRID ========== */
+    .tech-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    
+    .feature-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s;
+    }
+    
+    .feature-item:hover {
+      background: rgba(0, 123, 255, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .feature-item h4 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    /* ========== DETAILS TOGGLE ========== */
+    .tech-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+    
+    .tech-details.active {
+      max-height: 2000px;
+    }
+    
+    .tech-toggle {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tech-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+    }
+    
+    /* ========== TECHNOLOGY GRID ========== */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    
+    .tech-summary-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .tech-summary-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary-color);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .tech-summary-card i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    /* ========== SERVICE CARDS ========== */
+    .service-card,
+    .pricing-card,
+    .project-card,
+    .team-card,
+    .stat-card,
+    .testimonial-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 35px;
+      text-align: center;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .service-card::before,
+    .pricing-card::before,
+    .project-card::before,
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    }
+    
+    .service-card:hover,
+    .pricing-card:hover,
+    .project-card:hover,
+    .team-card:hover,
+    .stat-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      border-color: var(--primary-color);
+    }
+    
+    /* Service Cards */
+    .service-card i {
+      font-size: 3.5rem;
+      color: var(--primary-color);
+      margin-bottom: 25px;
+      transition: transform 0.5s;
+      background: rgba(0, 123, 255, 0.1);
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .service-card:hover i {
+      transform: scale(1.2) rotate(10deg);
+      background: rgba(0, 123, 255, 0.2);
+    }
+    
+    .service-card h3 {
+      font-size: 1.7rem;
+      margin-bottom: 20px;
+      color: white;
+      font-weight: 700;
+    }
+    
+    body.light .service-card h3 {
+      color: #222;
+    }
+    
+    .service-toggle {
+      background: rgba(0, 123, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
+    
+    .service-toggle:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .service-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      text-align: left;
+      margin-top: 20px;
+    }
+    
+    .service-details.active {
+      max-height: 500px;
+    }
+    
+    .service-details ul {
+      list-style: none;
+      margin-top: 15px;
+    }
+    
+    .service-details li {
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .service-details li:before {
+      content: '✓';
+      color: var(--success-green);
+      font-weight: bold;
+    }
+    
+    /* ========== PRICING CARDS ========== */
+    .pricing-card.featured {
+      transform: scale(1.05);
+      border-color: var(--warning-yellow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pricing-card.featured::before {
+      content: 'POPULAR';
+      position: absolute;
+      top: 20px;
+      right: -35px;
+      background: var(--warning-yellow);
+      color: #000;
+      padding: 8px 40px;
+      transform: rotate(45deg);
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    
+    .price {
+      font-size: 3.5rem;
+      color: var(--primary-color);
+      margin: 25px 0;
+      font-weight: 800;
+    }
+    
+    .price span {
+      font-size: 1.2rem;
+      color: #aaa;
+    }
+    
+    .pricing-features {
+      list-style: none;
+      margin: 25px 0;
+      text-align: left;
+    }
+    
+    .pricing-features li {
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .pricing-features li i {
+      color: var(--success-green);
+    }
+    
+    /* ========== PROJECT CARDS ========== */
+    .project-img {
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+      border-radius: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .project-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s;
+    }
+    
+    .project-card:hover .project-img img {
+      transform: scale(1.1);
+    }
+    
+    /* ========== TEAM CARDS ========== */
+    .team-img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      margin: 0 auto 25px;
+      overflow: hidden;
+      border: 4px solid var(--primary-color);
+      padding: 4px;
+      background: white;
+      transition: all 0.3s;
+    }
+    
+    .team-card:hover .team-img {
+      transform: scale(1.05);
+      border-color: var(--accent-color);
+    }
+    
+    .team-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    .role {
+      color: var(--accent-color);
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    /* ========== GRID CONTAINERS ========== */
+    .services-container,
+    .pricing-container,
+    .projects-container,
+    .team-container,
+    .stats-container,
+    .skills-container {
+      display: grid;
+      gap: 35px;
+      margin-top: 50px;
+    }
+    
+    .services-container {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    
+    .pricing-container {
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+    
+    .projects-container {
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+    
+    .team-container {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .stats-container {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    
+    .skills-container {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    /* ========== STATISTICS CARDS ========== */
+    .stat-card {
+      padding: 40px 30px;
+    }
+    
+    .stat-number {
+      font-size: 4rem;
+      color: var(--primary-color);
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+    
+    .stat-label {
+      font-size: 1.3rem;
+      color: #ddd;
+    }
+    
+    body.light .stat-label {
+      color: #555;
+    }
+    
+    /* ========== SKILL ITEMS ========== */
+    .skill-item {
+      text-align: center;
+      padding: 30px 25px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .skill-item:hover {
+      transform: translateY(-10px);
+      background: rgba(0, 123, 255, 0.15);
+      border-color: var(--primary-color);
+    }
+    
+    .skill-item i {
+      font-size: 4rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+    
+    .skill-item h4 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    /* ========== TESTIMONIALS ========== */
+    .testimonials-slider {
+      margin-top: 50px;
+      position: relative;
+    }
+    
+    .testimonial-card {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+    
+    .testimonial-text {
+      font-size: 1.3rem;
+      font-style: italic;
+      margin-bottom: 30px;
+      line-height: 1.8;
+      position: relative;
+    }
+    
+    .testimonial-text::before,
+    .testimonial-text::after {
+      content: '"';
+      font-size: 3rem;
+      color: var(--primary-color);
+      opacity: 0.3;
+      position: absolute;
+    }
+    
+    .testimonial-text::before {
+      top: -20px;
+      left: -10px;
+    }
+    
+    .testimonial-text::after {
+      bottom: -40px;
+      right: -10px;
+    }
+    
+    .testimonial-author {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: white;
+    }
+    
+    body.light .testimonial-author {
+      color: #222;
+    }
+    
+    .testimonial-role {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+    
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-top: 40px;
+    }
+    
+    .slider-btn {
+      background: rgba(0, 123, 255, 0.1);
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .slider-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .slider-dots {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .slider-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .slider-dot.active {
+      background: var(--primary-color);
+      transform: scale(1.2);
+    }
+    
+    /* ========== CONTACT FORM ========== */
+    .contact-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 60px;
+      margin-top: 50px;
+    }
+    
+    .contact-info h3 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: white;
+    }
+    
+    body.light .contact-info h3 {
+      color: #222;
+    }
+    
+    .contact-info p {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+    
+    .contact-info i {
+      color: var(--primary-color);
+      width: 25px;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0, 123, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .social-icon:hover {
+      background: var(--primary-color);
+      transform: translateY(-5px);
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: white;
+    }
+    
+    body.light .form-group label {
+      color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body.light .form-group input,
+    body.light .form-group textarea,
+    body.light .form-group select {
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 0 4px var(--hover-glow);
+    }
+    
+    body.light .form-group input:focus,
+    body.light .form-group textarea:focus,
+    body.light .form-group select:focus {
+      background: white;
+    }
+    
+    .error-message {
+      color: var(--danger-red);
+      font-size: 0.9rem;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .form-group input.error,
+    .form-group textarea.error {
+      border-color: var(--danger-red);
+    }
+    
+    /* ========== NEWSLETTER ========== */
+    .newsletter {
+      text-align: center;
+      padding: 70px 50px;
+      background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(0, 188, 212, 0.15));
+      border-radius: 25px;
+      margin: 80px auto;
+      max-width: 1200px;
+      border: 1px solid rgba(0, 123, 255, 0.3);
+      backdrop-filter: blur(20px);
+    }
+    
+    .newsletter h2 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      color: white;
+    }
+    
+    body.light .newsletter h2 {
+      color: #222;
+    }
+    
+    .newsletter p {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      color: #ddd;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    body.light .newsletter p {
+      color: #555;
+    }
+    
+    .newsletter-form {
+      display: flex;
+      max-width: 600px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+    
+    .newsletter-form input {
+      flex: 1;
+      padding: 18px 25px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.1rem;
+    }
+    
+    body.light .newsletter-form input {
+      background: white;
+      color: #333;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+    
+    /* ========== FOOTER ========== */
+    .footer {
+      background: linear-gradient(135deg, #0f0c29, #302b63);
+      color: white;
+      padding: 80px 30px 40px;
+      margin-top: 100px;
+      border-top: 2px solid rgba(0, 123, 255, 0.3);
+    }
+    
+    body.light .footer {
+      background: linear-gradient(135deg, #2c3e50, #4a6491);
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 50px;
+      max-width: 1200px;
+      margin: 0 auto 60px;
+    }
+    
+    .footer-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      color: white;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .footer-section h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary-color);
+    }
+    
+    .footer-section p {
+      margin-bottom: 20px;
+      line-height: 1.8;
+      color: #ddd;
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 15px;
+    }
+    
+    .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+    
+    .copyright {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #aaa;
+      font-size: 1rem;
+    }
+    
+    .copyright i {
+      color: var(--danger-red);
+      margin: 0 5px;
+    }
+    
+    /* ========== THEME TOGGLE ========== */
+    .theme-toggle {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      z-index: 1000;
+      background: rgba(0, 123, 255, 0.9);
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25); }
+      50% { box-shadow: 0 6px 30px rgba(0, 123, 255, 0.4); }
+      100% { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25); }
+    }
+    
+    .theme-toggle:hover {
+      transform: rotate(30deg) scale(1.1);
+      background: rgba(0, 123, 255, 1);
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.5);
+    }
+    
+    /* ========== SCROLL TO TOP ========== */
+    .to-top {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 998;
+      box-shadow: 0 6px 20px rgba(0, 188, 212, 0.3);
+      font-size: 1.3rem;
+    }
+    
+    .to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .to-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 25px rgba(0, 188, 212, 0.4);
+    }
+    
+    /* ========== AI CHATBOT ========== */
+    .chatbot-container {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 999;
+      width: 380px;
+      max-width: 90vw;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-toggle {
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+      color: white;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4);
+      transition: all 0.3s ease;
+      margin-left: auto;
+      position: relative;
+      animation: pulse-chat 3s infinite;
+    }
+    
+    @keyframes pulse-chat {
+      0% { box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4); }
+      50% { box-shadow: 0 8px 35px rgba(0, 188, 212, 0.6); }
+      100% { box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4); }
+    }
+    
+    .chatbot-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(0, 188, 212, 0.6);
+    }
+    
+    .chatbot-toggle i {
+      font-size: 28px;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--danger-red);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      animation: pulse-badge 1.5s infinite;
+    }
+    
+    @keyframes pulse-badge {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .chatbot-window {
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: none;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 20px;
+      height: 500px;
+      max-height: 70vh;
+    }
+    
+    .chatbot-window.active {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chatbot-header {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .chatbot-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    
+    .chatbot-close:hover {
+      transform: rotate(90deg);
+    }
+    
+    .chatbot-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .message {
+      max-width: 80%;
+      padding: 12px 18px;
+      border-radius: 18px;
+      line-height: 1.4;
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .message.bot {
+      background: rgba(0, 123, 255, 0.15);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+      border: 1px solid rgba(0, 123, 255, 0.3);
+    }
+    
+    .message.user {
+      background: rgba(0, 188, 212, 0.15);
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+    }
+    
+    .message-time {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-top: 5px;
+      text-align: right;
+    }
+    
+    .chatbot-input {
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      gap: 10px;
+    }
+    
+    .chatbot-input input {
+      flex: 1;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: var(--text-color);
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s;
+    }
+    
+    .chatbot-input input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .chatbot-input button {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      width: 50px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chatbot-input button:hover {
+      transform: scale(1.05);
+    }
+    
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 20px;
+    }
+    
+    .quick-reply {
+      background: rgba(0, 123, 255, 0.1);
+      border: 1px solid rgba(0, 123, 255, 0.3);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .quick-reply:hover {
+      background: rgba(0, 123, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 15px;
+      background: rgba(0, 123, 255, 0.1);
+      border-radius: 18px;
+      align-self: flex-start;
+      max-width: 60px;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+    
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    /* Staggered animations */
+    .services-container .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .services-container .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .services-container .service-card:nth-child(3) { animation-delay: 0.3s; }
+    .services-container .service-card:nth-child(4) { animation-delay: 0.4s; }
+    .services-container .service-card:nth-child(5) { animation-delay: 0.5s; }
+    .services-container .service-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    /* ========== RESPONSIVE DESIGN ========== */
+    @media (max-width: 1200px) {
+      section {
+        margin: 50px 20px;
+      }
+      
+      .newsletter {
+        margin: 80px 20px;
+      }
+      
+      .chatbot-container {
+        right: 30px;
+        bottom: 30px;
+      }
+    }
+    
+    @media (max-width: 1024px) {
+      .section-title {
+        font-size: 2.8rem;
+      }
+      
+      .hero-content h1 {
+        font-size: 3.5rem;
+      }
+      
+      .services-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+      
+      .tech-title {
+        font-size: 1.9rem;
+      }
+      
+      .testimonial-text {
+        font-size: 1.2rem;
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .tech-features {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 100px 20px 60px;
+      }
+      
+      .hero-content h1 {
+        font-size: 3rem;
+      }
+      
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 50px;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+      }
+      
+      .theme-toggle {
+        top: 90px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+      }
+      
+      .pricing-card.featured {
+        transform: scale(1);
+      }
+      
+      section {
+        padding: 70px 25px;
+        margin: 40px 15px;
+        border-radius: 20px;
+      }
+      
+      .newsletter-form {
+        flex-direction: column;
+      }
+      
+      .testimonial-card {
+        min-height: 350px;
+        padding: 30px;
+      }
+      
+      .services-container,
+      .pricing-container,
+      .projects-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .tech-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      
+      .tech-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2.8rem;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      .stat-card {
+        padding: 30px 20px;
+      }
+      
+      .stat-number {
+        font-size: 3.5rem;
+      }
+      
+      .to-top {
+        bottom: 30px;
+        right: 30px;
+        width: 55px;
+        height: 55px;
+      }
+      
+      .chatbot-container {
+        right: 20px;
+        bottom: 100px;
+        width: calc(100vw - 40px);
+        max-width: 400px;
+      }
+      
+      .chatbot-toggle {
+        width: 65px;
+        height: 65px;
+      }
+      
+      .chatbot-window {
+        height: 450px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .testimonial-text {
+        font-size: 1.1rem;
+      }
+      
+      .slider-controls {
+        gap: 20px;
+      }
+      
+      .slider-btn {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .tech-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero-content p {
+        font-size: 1.1rem;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      .price {
+        font-size: 3rem;
+      }
+      
+      .team-container,
+      .stats-container,
+      .skills-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .newsletter {
+        padding: 50px 25px;
+      }
+      
+      .newsletter h2 {
+        font-size: 2.2rem;
+      }
+      
+      .tech-card {
+        padding: 25px;
+      }
+      
+      .tech-title {
+        font-size: 1.7rem;
+      }
+      
+      .testimonial-text {
+        font-size: 1rem;
+        padding: 0 10px;
+      }
+      
+      .testimonial-author,
+      .testimonial-role {
+        font-size: 1.1rem;
+      }
+      
+      .chatbot-container {
+        bottom: 90px;
+        right: 15px;
+      }
+      
+      .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .chatbot-toggle i {
+        font-size: 24px;
+      }
+      
+      .chatbot-window {
+        height: 400px;
+      }
+      
+      .chatbot-header h3 {
+        font-size: 1.1rem;
+      }
+      
+      .message {
+        max-width: 90%;
+        padding: 10px 15px;
+        font-size: 0.95rem;
+      }
+      
+      .quick-replies {
+        padding: 0 15px 15px;
+      }
+      
+      .quick-reply {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .services-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      .service-card {
+        padding: 25px 20px;
+      }
+      
+      .service-card h3 {
+        font-size: 1.5rem;
+      }
+      
+      .stat-number {
+        font-size: 3rem;
+      }
+      
+      .stat-label {
+        font-size: 1.1rem;
+      }
+      
+      .chatbot-window {
+        height: 380px;
+      }
+    }
+    
+    /* ========== GOOGLE TRANSLATE ========== */
+    #google_translate_element {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      z-index: 1000;
+    }
+    
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+    
+    body > .goog-te-banner-frame {
+      display: none !important;
+    }
+    
+    .goog-te-gadget-simple {
+      background-color: rgba(0, 123, 255, 0.9) !important;
+      border: none !important;
+      border-radius: 12px !important;
+      padding: 10px 18px !important;
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 0.95rem !important;
+      color: white !important;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    }
+    
+    .goog-te-gadget-simple .goog-te-menu-value span {
+      color: white !important;
+    }
+    
+    .goog-te-gadget-simple .goog-te-menu-value span:first-child {
+      border-bottom: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Animation -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <p>Loading BorufTech...</p>
+  </div>
+  
+  <!-- Google Translate -->
+  <div id="google_translate_element"></div>
+  
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </button>
+  
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="logo">
+      <img src="Logo.png" alt="BorufTech Logo">
+    </div>
+    
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="#services"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="#tech-education"><i class="fas fa-graduation-cap"></i> Tech Education</a></li>
+        <li><a href="#pricing"><i class="fas fa-tags"></i> Pricing</a></li>
+        <li><a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
+        <li><a href="#testimonials"><i class="fas fa-comments"></i> Testimonials</a></li>
+        <li><a href="#stats"><i class="fas fa-chart-line"></i> Stats</a></li>
+        <li><a href="#team"><i class="fas fa-users"></i> Team</a></li>
+        <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="hero-content">
+      <h1>Build Your Future With #1 BorufTech</h1>
+      <p>At BorufTech, we transform your ideas into reality with cutting-edge technology and creative design. Let's build something amazing together.</p>
+      <div class="cta-buttons">
+        <a href="#contact" class="btn btn-primary">
+          <i class="fas fa-rocket"></i> Get Started
+        </a>
+        <a href="#tech-education" class="btn btn-secondary">
+          <i class="fas fa-graduation-cap"></i> Learn Tech
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <h2 class="section-title">About BorufTech</h2>
+    <div class="about-content">
+      <p style="font-size: 1.2rem; margin-bottom: 25px; line-height: 1.8;">BorufTech is a forward-thinking technology company dedicated to delivering exceptional digital solutions. With a team of passionate developers, designers, and strategists, we help businesses thrive in the digital landscape.</p>
+      <p style="font-size: 1.2rem; margin-bottom: 40px; line-height: 1.8;">Our mission is to empower organizations with innovative technology that drives growth, enhances efficiency, and creates memorable user experiences.</p>
+      <a href="#contact" class="btn btn-primary"><i class="fas fa-handshake"></i> Work With Us</a>
+    </div>
+  </section>
+  
+  <!-- Services Section -->
+  <section id="services" class="services-section">
+    <h2 class="section-title">Our Services</h2>
+    <div id="services-container" class="services-container">
+      <!-- React will render services here -->
+    </div>
+  </section>
+  
+  <!-- Tech Education Section -->
+  <section id="tech-education" class="tech-education">
+    <h2 class="section-title">Technology Education</h2>
+    <p style="text-align: center; font-size: 1.2rem; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto;">
+      Learn about modern technologies with interactive examples. Run code directly in your browser!
+    </p>
+    
+    <!-- HTML5 Section -->
+    <div class="tech-card fade-in" id="html-card">
+      <div class="tech-header">
+        <div class="tech-icon">
+          <i class="fab fa-html5"></i>
+        </div>
+        <div>
+          <h3 class="tech-title">HTML5 - Modern Web Structure</h3>
+          <p class="tech-intro">HTML5 is the latest version of HyperText Markup Language, introducing semantic elements, multimedia support, and advanced APIs for modern web development.</p>
+        </div>
+      </div>
+      
+      <div class="tech-features">
+        <div class="feature-item">
+          <h4>Semantic Elements</h4>
+          <p>Meaningful tags like &lt;header&gt;, &lt;footer&gt;, &lt;article&gt; for better structure</p>
+        </div>
+        <div class="feature-item">
+          <h4>Multimedia Support</h4>
+          <p>Native &lt;audio&gt; and &lt;video&gt; elements without plugins</p>
+        </div>
+        <div class="feature-item">
+          <h4>Canvas Graphics</h4>
+          <p>Dynamic drawing and animation capabilities</p>
+        </div>
+        <div class="feature-item">
+          <h4>Form Enhancements</h4>
+          <p>New input types and built-in validation</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-container">
+        <div class="code-header">
+          <span class="language-tag">HTML5</span>
+          <span>index.html</span>
+        </div>
+        <div class="code-editor" id="html-code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;HTML5 Example&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Welcome to HTML5&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;a href="#"&gt;Home&lt;/a&gt; |
+            &lt;a href="#"&gt;About&lt;/a&gt; |
+            &lt;a href="#"&gt;Contact&lt;/a&gt;
+        &lt;/nav&gt;
+    &lt;/header&gt;
+    
+    &lt;main&gt;
+        &lt;article class="card"&gt;
+            &lt;h2&gt;HTML5 Features&lt;/h2&gt;
+            &lt;p&gt;This demonstrates semantic HTML5 structure with modern styling.&lt;/p&gt;
+            &lt;button onclick="showMessage()"&gt;Click Me&lt;/button&gt;
+            &lt;button onclick="changeColor()"&gt;Change Color&lt;/button&gt;
+            &lt;div id="output" style="margin-top: 20px;"&gt;&lt;/div&gt;
+        &lt;/article&gt;
+        
+        &lt;section&gt;
+            &lt;h3&gt;New Input Types&lt;/h3&gt;
+            &lt;input type="color" id="colorPicker"&gt;
+            &lt;input type="date" id="datePicker"&gt;
+            &lt;input type="range" id="rangeSlider" min="0" max="100"&gt;
+            &lt;progress value="75" max="100"&gt;&lt;/progress&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    
+    &lt;footer&gt;
+        &lt;p&gt;&amp;copy; 2025 BorufTech&lt;/p&gt;
+    &lt;/footer&gt;
+    
+    &lt;script&gt;
+        function showMessage() {
+            document.getElementById('output').innerHTML = 
+                '&lt;h4&gt;Button Clicked!&lt;/h4&gt;&lt;p&gt;HTML5 is working perfectly.&lt;/p&gt;';
+        }
+        
+        function changeColor() {
+            const card = document.querySelector('.card');
+            const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#6f42c1'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            card.style.background = `linear-gradient(45deg, ${randomColor}, #333)`;
+        }
+        
+        // Event listeners for input elements
+        document.getElementById('colorPicker').addEventListener('input', function(e) {
+            document.body.style.backgroundColor = e.target.value + '20';
+        });
+        
+        document.getElementById('rangeSlider').addEventListener('input', function(e) {
+            document.querySelector('progress').value = e.target.value;
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </div>
+      </div>
+      
+      <button class="run-button" onclick="runHTMLExample()">
+        <i class="fas fa-play"></i> Run HTML Example
+      </button>
+      
+      <div class="output-area" id="html-output">
+        <p>Click "Run HTML Example" to see the HTML5 code in action.</p>
+        <div id="html-preview"></div>
+      </div>
+      
+      <div class="tech-details" id="html-details">
+        <div style="margin-top: 20px;">
+          <h4>HTML5 Key Features:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Semantic Elements:</strong> &lt;header&gt;, &lt;footer&gt;, &lt;article&gt;, &lt;section&gt;, &lt;nav&gt;</li>
+            <li><strong>Multimedia:</strong> Native &lt;audio&gt; and &lt;video&gt; support without plugins</li>
+            <li><strong>Canvas:</strong> 2D drawing API for graphics and animations</li>
+            <li><strong>Form Enhancements:</strong> New input types (date, color, range, email, url)</li>
+            <li><strong>Web Storage:</strong> localStorage and sessionStorage for client-side storage</li>
+            <li><strong>Geolocation:</strong> API to access user's geographical location</li>
+            <li><strong>Drag & Drop:</strong> Native drag and drop API</li>
+            <li><strong>Web Workers:</strong> Run scripts in background threads</li>
+            <li><strong>SVG Integration:</strong> Scalable Vector Graphics support</li>
+            <li><strong>Accessibility:</strong> Improved ARIA attributes and semantics</li>
+          </ul>
+        </div>
+      </div>
+      
+      <button class="tech-toggle" onclick="toggleDetails('html')">
+        <i class="fas fa-book"></i> Read More About HTML5
+      </button>
+    </div>
+    
+    <!-- CSS3 Section -->
+    <div class="tech-card fade-in" id="css-card">
+      <div class="tech-header">
+        <div class="tech-icon">
+          <i class="fab fa-css3-alt"></i>
+        </div>
+        <div>
+          <h3 class="tech-title">CSS3 - Modern Styling & Layouts</h3>
+          <p class="tech-intro">CSS3 introduces powerful features including Flexbox, Grid, animations, transitions, and responsive design capabilities for creating beautiful, modern websites.</p>
+        </div>
+      </div>
+      
+      <div class="tech-features">
+        <div class="feature-item">
+          <h4>Flexbox Layout</h4>
+          <p>One-dimensional layout model for efficient space distribution</p>
+        </div>
+        <div class="feature-item">
+          <h4>CSS Grid</h4>
+          <p>Two-dimensional grid-based layout system</p>
+        </div>
+        <div class="feature-item">
+          <h4>Animations</h4>
+          <p>Keyframe animations and smooth transitions</p>
+        </div>
+        <div class="feature-item">
+          <h4>CSS Variables</h4>
+          <p>Custom properties for reusable values</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-container">
+        <div class="code-header">
+          <span class="language-tag">CSS3</span>
+          <span>styles.css</span>
+        </div>
+        <div class="code-editor" id="css-code">
+/* CSS Variables for consistent theming */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Flexbox Layout Example */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+}
+
+.flex-item {
+    flex: 1 1 200px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--box-shadow);
+}
+
+.flex-item:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background: white;
+}
+
+/* CSS Grid Layout Example */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+}
+
+.grid-item {
+    background: var(--primary-color);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.grid-item:hover {
+    background: #0056b3;
+    transform: rotate(5deg);
+}
+
+/* Animation Example */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-box {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    border-radius: var(--border-radius);
+    animation: fadeInUp 1s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+/* Button with Hover Effects */
+.css-button {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    margin: 10px;
+}
+
+.css-button:hover {
+    background: linear-gradient(45deg, #0056b3, #545b62);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+.css-button:active {
+    transform: translateY(-1px);
+}
+
+/* Responsive Design with Media Queries */
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+    }
+    
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .flex-item {
+        flex: 1 1 100%;
+    }
+}
+
+/* Transform Examples */
+.transform-demo {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    margin: 20px auto;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+}
+
+.transform-demo:hover {
+    transform: rotate(45deg) scale(1.2);
+}
+
+/* Text Effects */
+.text-effects {
+    font-size: 2.5em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96c93d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+        </div>
+      </div>
+      
+      <button class="run-button" onclick="runCSSExample()">
+        <i class="fas fa-play"></i> Run CSS Example
+      </button>
+      
+      <div class="output-area" id="css-output">
+        <p>Click "Run CSS Example" to see CSS3 features in action.</p>
+        <div id="css-preview"></div>
+      </div>
+      
+      <div class="tech-details" id="css-details">
+        <div style="margin-top: 20px;">
+          <h4>CSS3 Key Features:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Flexbox:</strong> Efficient way to layout, align and distribute space among items in a container</li>
+            <li><strong>CSS Grid:</strong> Two-dimensional grid-based layout system</li>
+            <li><strong>Transitions:</strong> Smooth state changes over a specified duration</li>
+            <li><strong>Animations:</strong> @keyframes for complex animations</li>
+            <li><strong>Custom Properties (CSS Variables):</strong> Reusable values defined by custom properties</li>
+            <li><strong>Media Queries:</strong> Responsive design for different screen sizes</li>
+            <li><strong>Box Shadow & Text Shadow:</strong> Drop shadows for elements and text</li>
+            <li><strong>Border Radius:</strong> Rounded corners without images</li>
+            <li><strong>Gradients:</strong> Linear, radial, and conic gradients</li>
+            <li><strong>Transforms:</strong> Rotate, scale, skew, and translate elements</li>
+            <li><strong>Filters:</strong> Visual effects like blur, brightness, contrast</li>
+            <li><strong>Multiple Backgrounds:</strong> Layer multiple background images</li>
+          </ul>
+        </div>
+      </div>
+      
+      <button class="tech-toggle" onclick="toggleDetails('css')">
+        <i class="fas fa-book"></i> Read More About CSS3
+      </button>
+    </div>
+    
+    <!-- JavaScript Section -->
+    <div class="tech-card fade-in" id="js-card">
+      <div class="tech-header">
+        <div class="tech-icon">
+          <i class="fab fa-js"></i>
+        </div>
+        <div>
+          <h3 class="tech-title">JavaScript ES6+ - Modern Web Programming</h3>
+          <p class="tech-intro">JavaScript ES6+ introduces modern syntax and features that make code more readable, maintainable, and powerful for building interactive web applications.</p>
+        </div>
+      </div>
+      
+      <div class="tech-features">
+        <div class="feature-item">
+          <h4>Arrow Functions</h4>
+          <p>Concise syntax with lexical `this` binding</p>
+        </div>
+        <div class="feature-item">
+          <h4>Async/Await</h4>
+          <p>Clean asynchronous code without callbacks</p>
+        </div>
+        <div class="feature-item">
+          <h4>Destructuring</h4>
+          <p>Extract values from arrays and objects</p>
+        </div>
+        <div class="feature-item">
+          <h4>Modules</h4>
+          <p>ES6 module system for better code organization</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-container">
+        <div class="code-header">
+          <span class="language-tag">JavaScript</span>
+          <span>script.js</span>
+        </div>
+        <div class="code-editor" id="js-code">
+// ES6+ Modern JavaScript Features
+
+// 1. Arrow Functions
+const greet = (name) => `Hello, ${name}!`;
+const add = (a, b) => a + b;
+
+// 2. Template Literals
+const user = {
+    name: "John Doe",
+    age: 30,
+    profession: "Developer"
+};
+
+const userInfo = `Name: ${user.name}
+Age: ${user.age}
+Profession: ${user.profession}`;
+
+// 3. Destructuring Assignment
+const colors = ["red", "green", "blue", "yellow"];
+const [primary, secondary, ...otherColors] = colors;
+
+const person = {
+    firstName: "Jane",
+    lastName: "Smith",
+    age: 25,
+    location: "New York"
+};
+
+const { firstName, lastName, ...rest } = person;
+
+// 4. Spread Operator
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const combined = [...arr1, ...arr2];
+
+// 5. Rest Parameters
+function sum(...numbers) {
+    return numbers.reduce((total, num) => total + num, 0);
+}
+
+// 6. Default Parameters
+function createUser(name = "Guest", age = 18, role = "user") {
+    return { name, age, role };
+}
+
+// 7. Classes
+class Animal {
+    constructor(name, species) {
+        this.name = name;
+        this.species = species;
+        this.age = 0;
+    }
+    
+    speak() {
+        return `${this.name} makes a sound`;
+    }
+    
+    celebrateBirthday() {
+        this.age += 1;
+        return `${this.name} is now ${this.age} years old`;
+    }
+}
+
+class Dog extends Animal {
+    constructor(name, breed) {
+        super(name, "Dog");
+        this.breed = breed;
+    }
+    
+    speak() {
+        return "Woof! Woof!";
+    }
+}
+
+// 8. Promises and Async/Await
+function fetchData(delay = 1000) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const success = Math.random() > 0.2;
+            if (success) {
+                resolve({ 
+                    data: "Data fetched successfully", 
+                    timestamp: new Date().toLocaleTimeString() 
+                });
+            } else {
+                reject(new Error("Failed to fetch data"));
+            }
+        }, delay);
+    });
+}
+
+async function getData() {
+    try {
+        const result = await fetchData(1500);
+        return result;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+// 9. Modern Array Methods
+const products = [
+    { id: 1, name: "Laptop", price: 999, category: "Electronics" },
+    { id: 2, name: "Mouse", price: 29, category: "Electronics" },
+    { id: 3, name: "Chair", price: 199, category: "Furniture" },
+    { id: 4, name: "Desk", price: 299, category: "Furniture" },
+    { id: 5, name: "Monitor", price: 399, category: "Electronics" }
+];
+
+// Map, Filter, Reduce
+const electronics = products
+    .filter(p => p.category === "Electronics")
+    .map(p => ({ ...p, priceWithTax: p.price * 1.08 }));
+
+const totalValue = products.reduce((sum, p) => sum + p.price, 0);
+
+// 10. Optional Chaining and Nullish Coalescing
+const company = {
+    name: "Tech Corp",
+    address: {
+        street: "123 Main St",
+        city: "San Francisco",
+        zip: null
+    },
+    employees: [
+        { name: "Alice", department: "Engineering" },
+        { name: "Bob", department: "Marketing" }
+    ]
+};
+
+const city = company.address?.city;
+const zip = company.address?.zip ?? "Unknown";
+const employee = company.employees?.[0]?.name;
+
+// Example Usage Functions
+function runExamples() {
+    const output = [];
+    
+    output.push("=== JavaScript ES6+ Examples ===");
+    output.push(`1. Arrow Function: ${greet("Developer")}`);
+    output.push(`2. Template Literal:\n${userInfo}`);
+    output.push(`3. Destructuring: ${firstName} ${lastName}`);
+    output.push(`4. Spread Operator: [${combined}]`);
+    output.push(`5. Sum Function: ${sum(1, 2, 3, 4, 5)}`);
+    output.push(`6. Default Params: ${JSON.stringify(createUser())}`);
+    
+    const myDog = new Dog("Buddy", "Golden Retriever");
+    output.push(`7. Class: ${myDog.speak()}`);
+    output.push(`8. Array Methods: ${electronics.length} electronics products`);
+    output.push(`9. Optional Chaining: ${city}, ZIP: ${zip}`);
+    
+    // Run async example
+    getData().then(result => {
+        output.push(`10. Async/Await: ${typeof result === 'string' ? result : result.data}`);
+        document.getElementById('js-preview').innerHTML = output.join('<br>');
+    });
+    
+    return output.slice(0, -1).join('<br>');
+}
+        </div>
+      </div>
+      
+      <button class="run-button" onclick="runJSExample()">
+        <i class="fas fa-play"></i> Run JavaScript Example
+      </button>
+      
+      <div class="output-area" id="js-output">
+        <p>Click "Run JavaScript Example" to execute the ES6+ code.</p>
+        <div id="js-preview"></div>
+      </div>
+      
+      <div class="tech-details" id="js-details">
+        <div style="margin-top: 20px;">
+          <h4>JavaScript ES6+ Key Features:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>let & const:</strong> Block-scoped variable declarations</li>
+            <li><strong>Arrow Functions:</strong> Concise syntax with lexical `this`</li>
+            <li><strong>Template Literals:</strong> String interpolation and multi-line strings</li>
+            <li><strong>Destructuring:</strong> Extract values from arrays and objects</li>
+            <li><strong>Spread/Rest Operators:</strong> Expand arrays/objects and collect parameters</li>
+            <li><strong>Default Parameters:</strong> Default values for function parameters</li>
+            <li><strong>Classes:</strong> Syntactic sugar over prototype-based inheritance</li>
+            <li><strong>Modules:</strong> Import/export for code organization</li>
+            <li><strong>Promises:</strong> Better asynchronous programming</li>
+            <li><strong>Async/Await:</strong> Syntactic sugar over promises</li>
+            <li><strong>Map & Set:</strong> New data structures</li>
+            <li><strong>Symbol:</strong> New primitive data type</li>
+            <li><strong>Iterators & Generators:</strong> New iteration protocols</li>
+            <li><strong>Proxy & Reflect:</strong> Metaprogramming capabilities</li>
+            <li><strong>Optional Chaining (?.) & Nullish Coalescing (??):</strong> Safe property access and default values</li>
+          </ul>
+        </div>
+      </div>
+      
+      <button class="tech-toggle" onclick="toggleDetails('js')">
+        <i class="fas fa-book"></i> Read More About JavaScript
+      </button>
+    </div>
+    
+    <!-- React.js Section -->
+    <div class="tech-card fade-in" id="react-card">
+      <div class="tech-header">
+        <div class="tech-icon">
+          <i class="fab fa-react"></i>
+        </div>
+        <div>
+          <h3 class="tech-title">React.js - Modern UI Development</h3>
+          <p class="tech-intro">React is a declarative, efficient, and flexible JavaScript library for building user interfaces. It lets you compose complex UIs from small, isolated pieces called components.</p>
+        </div>
+      </div>
+      
+      <div class="tech-features">
+        <div class="feature-item">
+          <h4>Components</h4>
+          <p>Reusable UI components with their own state and logic</p>
+        </div>
+        <div class="feature-item">
+          <h4>Hooks</h4>
+          <p>Use state and other React features without classes</p>
+        </div>
+        <div class="feature-item">
+          <h4>Virtual DOM</h4>
+          <p>Efficient updates by comparing virtual and actual DOM</p>
+        </div>
+        <div class="feature-item">
+          <h4>JSX Syntax</h4>
+          <p>JavaScript XML for writing HTML-like code in JavaScript</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-container">
+        <div class="code-header">
+          <span class="language-tag">React.js</span>
+          <span>App.jsx</span>
+        </div>
+        <div class="code-editor" id="react-code">
+// React Component with Hooks
+import React, { useState, useEffect } from 'react';
+
+// Functional Component Example
+function Counter() {
+    const [count, setCount] = useState(0);
+    const [isActive, setIsActive] = useState(false);
+    
+    useEffect(() => {
+        let interval = null;
+        if (isActive) {
+            interval = setInterval(() => {
+                setCount(prevCount => prevCount + 1);
+            }, 1000);
+        } else if (!isActive && count !== 0) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [isActive, count]);
+    
+    const handleReset = () => {
+        setCount(0);
+        setIsActive(false);
+    };
+    
+    return (
+        <div className="counter">
+            <h2>Counter: {count}</h2>
+            <div className="buttons">
+                <button onClick={() => setIsActive(!isActive)}>
+                    {isActive ? 'Pause' : 'Start'}
+                </button>
+                <button onClick={handleReset}>Reset</button>
+            </div>
+        </div>
+    );
+}
+
+// Todo List Component
+function TodoList() {
+    const [todos, setTodos] = useState([
+        { id: 1, text: 'Learn React', completed: true },
+        { id: 2, text: 'Build a project', completed: false },
+        { id: 3, text: 'Master Hooks', completed: false }
+    ]);
+    const [input, setInput] = useState('');
+    
+    const addTodo = () => {
+        if (input.trim()) {
+            const newTodo = {
+                id: Date.now(),
+                text: input,
+                completed: false
+            };
+            setTodos([...todos, newTodo]);
+            setInput('');
+        }
+    };
+    
+    const toggleTodo = (id) => {
+        setTodos(todos.map(todo =>
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        ));
+    };
+    
+    const removeTodo = (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+    };
+    
+    return (
+        <div className="todo-app">
+            <h2>Todo List</h2>
+            <div className="todo-input">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Add a new todo..."
+                    onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+                />
+                <button onClick={addTodo}>Add</button>
+            </div>
+            <ul className="todo-list">
+                {todos.map(todo => (
+                    <li key={todo.id} className={todo.completed ? 'completed' : ''}>
+                        <span onClick={() => toggleTodo(todo.id)}>
+                            {todo.text}
+                        </span>
+                        <button onClick={() => removeTodo(todo.id)}>Remove</button>
+                    </li>
+                ))}
+            </ul>
+            <p>Total: {todos.length} | Completed: {todos.filter(t => t.completed).length}</p>
+        </div>
+    );
+}
+
+// User Profile Component
+function UserProfile() {
+    const [user, setUser] = useState({
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'Developer',
+        theme: 'light'
+    });
+    
+    const [isEditing, setIsEditing] = useState(false);
+    
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser(prev => ({ ...prev, [name]: value }));
+    };
+    
+    const toggleTheme = () => {
+        setUser(prev => ({
+            ...prev,
+            theme: prev.theme === 'light' ? 'dark' : 'light'
+        }));
+    };
+    
+    return (
+        <div className={`user-profile ${user.theme}`}>
+            <h2>User Profile</h2>
+            {isEditing ? (
+                <div className="edit-form">
+                    <input
+                        name="name"
+                        value={user.name}
+                        onChange={handleChange}
+                        placeholder="Name"
+                    />
+                    <input
+                        name="email"
+                        value={user.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                    />
+                    <select name="role" value={user.role} onChange={handleChange}>
+                        <option value="Developer">Developer</option>
+                        <option value="Designer">Designer</option>
+                        <option value="Manager">Manager</option>
+                    </select>
+                    <button onClick={() => setIsEditing(false)}>Save</button>
+                </div>
+            ) : (
+                <div className="profile-info">
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Role:</strong> {user.role}</p>
+                    <p><strong>Theme:</strong> {user.theme}</p>
+                    <div className="actions">
+                        <button onClick={() => setIsEditing(true)}>Edit</button>
+                        <button onClick={toggleTheme}>
+                            Switch to {user.theme === 'light' ? 'Dark' : 'Light'} Theme
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// Main App Component
+function App() {
+    return (
+        <div className="react-app">
+            <h1>React Examples</h1>
+            <div className="components-grid">
+                <Counter />
+                <TodoList />
+                <UserProfile />
+            </div>
+        </div>
+    );
+}
+
+export default App;
+        </div>
+      </div>
+      
+      <button class="run-button" onclick="runReactExample()">
+        <i class="fas fa-play"></i> Run React Example
+      </button>
+      
+      <div class="react-demo-area" id="react-output">
+        <p>React components will render here after clicking "Run React Example"</p>
+      </div>
+      
+      <div class="tech-details" id="react-details">
+        <div style="margin-top: 20px;">
+          <h4>React.js Key Features:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Components:</strong> Building blocks of React applications (functional and class components)</li>
+            <li><strong>JSX:</strong> JavaScript XML syntax that gets compiled to JavaScript</li>
+            <li><strong>Virtual DOM:</strong> In-memory representation of actual DOM for efficient updates</li>
+            <li><strong>Props:</strong> Read-only data passed from parent to child components</li>
+            <li><strong>State:</strong> Mutable data that triggers re-renders when changed</li>
+            <li><strong>Hooks:</strong> useState, useEffect, useContext, useReducer, useCallback, useMemo</li>
+            <li><strong>Lifecycle Methods:</strong> Mounting, updating, and unmounting phases</li>
+            <li><strong>Context API:</strong> Share data across component tree without prop drilling</li>
+            <li><strong>Error Boundaries:</strong> Catch JavaScript errors anywhere in child component tree</li>
+            <li><strong>React Router:</strong> Declarative routing for single-page applications</li>
+            <li><strong>Server-Side Rendering:</strong> Next.js for improved SEO and performance</li>
+            <li><strong>React Native:</strong> Build native mobile apps using React</li>
+          </ul>
+        </div>
+      </div>
+      
+      <button class="tech-toggle" onclick="toggleDetails('react')">
+        <i class="fas fa-book"></i> Read More About React.js
+      </button>
+    </div>
+    
+    <!-- Python Section -->
+    <div class="tech-card fade-in" id="python-card">
+      <div class="tech-header">
+        <div class="tech-icon">
+          <i class="fab fa-python"></i>
+        </div>
+        <div>
+          <h3 class="tech-title">Python - Versatile Programming Language</h3>
+          <p class="tech-intro">Python is a high-level, interpreted programming language known for its simplicity, readability, and versatility. It's used in web development, data science, machine learning, automation, and more.</p>
+        </div>
+      </div>
+      
+      <div class="tech-features">
+        <div class="feature-item">
+          <h4>Web Development</h4>
+          <p>Django, Flask, FastAPI for building web applications</p>
+        </div>
+        <div class="feature-item">
+          <h4>Data Science</h4>
+          <p>Pandas, NumPy, SciPy for data analysis and scientific computing</p>
+        </div>
+        <div class="feature-item">
+          <h4>Machine Learning</h4>
+          <p>TensorFlow, PyTorch, Scikit-learn for AI and ML projects</p>
+        </div>
+        <div class="feature-item">
+          <h4>Automation</h4>
+          <p>Scripting, web scraping, and task automation</p>
+        </div>
+      </div>
+      
+      <div class="code-editor-container">
+        <div class="code-header">
+          <span class="language-tag">Python</span>
+          <span>main.py</span>
+        </div>
+        <div class="code-editor" id="python-code">
+# Python Programming Examples
+
+print("=== Python Basics ===\n")
+
+# 1. Variables and Data Types
+name = "Python Developer"
+age = 25
+height = 1.75
+is_developer = True
+skills = ["Python", "JavaScript", "React", "Django"]
+
+print(f"Name: {name}")
+print(f"Age: {age}")
+print(f"Height: {height}m")
+print(f"Is Developer: {is_developer}")
+print(f"Skills: {', '.join(skills)}")
+
+# 2. Control Flow
+print("\n=== Control Flow Examples ===")
+
+# If-elif-else
+temperature = 22
+if temperature < 0:
+    weather = "Freezing"
+elif temperature < 10:
+    weather = "Cold"
+elif temperature < 20:
+    weather = "Cool"
+elif temperature < 30:
+    weather = "Warm"
+else:
+    weather = "Hot"
+
+print(f"Temperature: {temperature}°C - {weather}")
+
+# For loop
+print("\nCounting to 5:")
+for i in range(1, 6):
+    print(f"  {i}")
+
+# While loop
+print("\nCountdown:")
+counter = 5
+while counter > 0:
+    print(f"  {counter}")
+    counter -= 1
+print("  Blast off! 🚀")
+
+# 3. Functions
+print("\n=== Function Examples ===")
+
+def greet(name):
+    return f"Hello, {name}!"
+
+def calculate_area(length, width=1):
+    return length * width
+
+# Lambda function
+square = lambda x: x ** 2
+
+print(greet("Python Programmer"))
+print(f"Area 5x3: {calculate_area(5, 3)}")
+print(f"Square of 4: {square(4)}")
+
+# 4. Data Structures
+print("\n=== Data Structures ===")
+
+# Lists
+fruits = ["apple", "banana", "cherry", "date"]
+fruits.append("elderberry")
+print(f"Fruits: {fruits}")
+print(f"First fruit: {fruits[0]}")
+print(f"Last fruit: {fruits[-1]}")
+
+# Dictionaries
+person = {
+    "name": "John Doe",
+    "age": 30,
+    "city": "New York",
+    "skills": ["Python", "JavaScript", "React"]
+}
+print(f"\nPerson: {person['name']}, {person['age']} years old")
+print(f"Skills: {', '.join(person['skills'])}")
+
+# Sets
+set_a = {1, 2, 3, 4, 5}
+set_b = {4, 5, 6, 7, 8}
+print(f"\nSet A: {set_a}")
+print(f"Set B: {set_b}")
+print(f"Union: {set_a | set_b}")
+print(f"Intersection: {set_a & set_b}")
+
+# 5. List Comprehensions
+print("\n=== List Comprehensions ===")
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+squared = [x ** 2 for x in numbers]
+even_numbers = [x for x in numbers if x % 2 == 0]
+print(f"Numbers: {numbers}")
+print(f"Squared: {squared}")
+print(f"Even numbers: {even_numbers}")
+
+# 6. Error Handling
+print("\n=== Error Handling ===")
+
+def safe_divide(a, b):
+    try:
+        result = a / b
+        return f"{a} / {b} = {result:.2f}"
+    except ZeroDivisionError:
+        return f"Error: Cannot divide {a} by zero!"
+    except TypeError:
+        return "Error: Invalid input types!"
+    except Exception as e:
+        return f"Unexpected error: {type(e).__name__}"
+
+print(safe_divide(10, 2))
+print(safe_divide(10, 0))
+print(safe_divide(10, "2"))
+
+# 7. Classes and Objects
+print("\n=== Object-Oriented Programming ===")
+
+class Animal:
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+        self.age = 0
+    
+    def speak(self):
+        return "Some generic animal sound"
+    
+    def celebrate_birthday(self):
+        self.age += 1
+        return f"Happy Birthday {self.name}! Now {self.age} years old."
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name, "Dog")
+        self.breed = breed
+    
+    def speak(self):
+        return "Woof! Woof!"
+    
+    def get_info(self):
+        return f"{self.name} ({self.breed})"
+
+# Create objects
+buddy = Dog("Buddy", "Golden Retriever")
+print(f"{buddy.get_info()} says: {buddy.speak()}")
+print(buddy.celebrate_birthday())
+
+# 8. File Handling (simulated with StringIO)
+print("\n=== File Handling (Simulated) ===")
+
+import io
+
+# Simulating file content
+file_content = """Line 1: Hello Python
+Line 2: Welcome to programming
+Line 3: Python is awesome
+Line 4: Let's code together"""
+
+file_like = io.StringIO(file_content)
+lines = file_like.readlines()
+print(f"Total lines in 'file': {len(lines)}")
+print("First 2 lines:")
+for line in lines[:2]:
+    print(f"  {line.strip()}")
+
+# 9. Advanced Example: Simple Calculator
+print("\n=== Simple Calculator ===")
+
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
+    
+    @staticmethod
+    def subtract(a, b):
+        return a - b
+    
+    @staticmethod
+    def multiply(a, b):
+        return a * b
+    
+    @staticmethod
+    def divide(a, b):
+        if b == 0:
+            raise ValueError("Cannot divide by zero")
+        return a / b
+
+calc = Calculator()
+print(f"5 + 3 = {calc.add(5, 3)}")
+print(f"5 - 3 = {calc.subtract(5, 3)}")
+print(f"5 * 3 = {calc.multiply(5, 3)}")
+try:
+    print(f"10 / 2 = {calc.divide(10, 2)}")
+    print(f"10 / 0 = {calc.divide(10, 0)}")
+except ValueError as e:
+    print(f"Error: {e}")
+
+print("\n=== Python Summary ===")
+print("✓ Simple and readable syntax")
+print("✓ Versatile applications")
+print("✓ Large standard library")
+print("✓ Strong community support")
+print("✓ Cross-platform compatibility")
+        </div>
+      </div>
+      
+      <button class="run-button" onclick="runPythonExample()" id="python-run-btn">
+        <i class="fas fa-play"></i> Run Python Code
+      </button>
+      
+      <div class="output-area python-output" id="python-output">
+        <p>Python output will appear here after clicking "Run Python Code"</p>
+        <div id="python-result"></div>
+      </div>
+      
+      <div class="tech-details" id="python-details">
+        <div style="margin-top: 20px;">
+          <h4>Python Key Features:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Easy to Learn:</strong> Simple and readable syntax, great for beginners</li>
+            <li><strong>Interpreted Language:</strong> No compilation needed, rapid development</li>
+            <li><strong>Dynamically Typed:</strong> No need to declare variable types</li>
+            <li><strong>Object-Oriented:</strong> Supports classes, inheritance, and polymorphism</li>
+            <li><strong>Extensive Libraries:</strong> Rich standard library and third-party packages</li>
+            <li><strong>Cross-Platform:</strong> Runs on Windows, Linux, macOS</li>
+            <li><strong>Community Support:</strong> Large and active community</li>
+            <li><strong>Integration Capabilities:</strong> Can integrate with C/C++, Java, .NET</li>
+            <li><strong>Memory Management:</strong> Automatic garbage collection</li>
+            <li><strong>Versatile Applications:</strong> Web, data science, AI, automation, gaming</li>
+          </ul>
+          
+          <h4>Popular Python Frameworks & Libraries:</h4>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Web Development:</strong> Django, Flask, FastAPI, Pyramid</li>
+            <li><strong>Data Science:</strong> Pandas, NumPy, SciPy, Jupyter</li>
+            <li><strong>Machine Learning:</strong> TensorFlow, PyTorch, Scikit-learn, Keras</li>
+            <li><strong>Data Visualization:</strong> Matplotlib, Seaborn, Plotly</li>
+            <li><strong>Web Scraping:</strong> BeautifulSoup, Scrapy, Selenium</li>
+            <li><strong>Testing:</strong> pytest, unittest, doctest</li>
+            <li><strong>GUI Development:</strong> Tkinter, PyQt, Kivy</li>
+            <li><strong>Game Development:</strong> Pygame, Panda3D, Arcade</li>
+          </ul>
+        </div>
+      </div>
+      
+      <button class="tech-toggle" onclick="toggleDetails('python')">
+        <i class="fas fa-book"></i> Read More About Python
+      </button>
+    </div>
+    
+    <!-- Technology Summary Grid -->
+    <div class="tech-grid">
+      <div class="tech-summary-card fade-in">
+        <i class="fab fa-html5"></i>
+        <h3>HTML5</h3>
+        <p>Structure & Semantics</p>
+        <p>Foundation of all web pages</p>
+      </div>
+      
+      <div class="tech-summary-card fade-in">
+        <i class="fab fa-css3-alt"></i>
+        <h3>CSS3</h3>
+        <p>Styling & Layout</p>
+        <p>Visual presentation and design</p>
+      </div>
+      
+      <div class="tech-summary-card fade-in">
+        <i class="fab fa-js"></i>
+        <h3>JavaScript</h3>
+        <p>Interactivity & Logic</p>
+        <p>Dynamic behavior and functionality</p>
+      </div>
+      
+      <div class="tech-summary-card fade-in">
+        <i class="fab fa-react"></i>
+        <h3>React.js</h3>
+        <p>UI Components</p>
+        <p>Modern front-end development</p>
+      </div>
+      
+      <div class="tech-summary-card fade-in">
+        <i class="fab fa-python"></i>
+        <h3>Python</h3>
+        <p>Backend & Data</p>
+        <p>Versatile programming language</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+      <h3>🚀 Ready to Learn More?</h3>
+      <p style="margin: 20px 0; font-size: 1.1rem;">Explore these technologies with our interactive examples above. Try modifying the code and running it again!</p>
+      <a href="#contact" class="btn btn-primary"><i class="fas fa-graduation-cap"></i> Start Learning Journey</a>
+    </div>
+  </section>
+  
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing-section">
+    <h2 class="section-title">Pricing Plans</h2>
+    <div class="pricing-container">
+      <div class="pricing-card fade-in">
+        <h3>Starter</h3>
+        <div class="price">$499<span>/project</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> Responsive Website</li>
+          <li><i class="fas fa-check"></i> 5 Pages</li>
+          <li><i class="fas fa-check"></i> Basic SEO</li>
+          <li><i class="fas fa-check"></i> Contact Form</li>
+          <li><i class="fas fa-check"></i> 1 Month Support</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary">Get Started</a>
+      </div>
+      
+      <div class="pricing-card featured fade-in">
+        <h3>Professional</h3>
+        <div class="price">$1,299<span>/project</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> Everything in Starter</li>
+          <li><i class="fas fa-check"></i> E-commerce Functionality</li>
+          <li><i class="fas fa-check"></i> Advanced SEO</li>
+          <li><i class="fas fa-check"></i> CMS Integration</li>
+          <li><i class="fas fa-check"></i> 3 Months Support</li>
+          <li><i class="fas fa-check"></i> Mobile App</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Get Started</a>
+      </div>
+      
+      <div class="pricing-card fade-in">
+        <h3>Enterprise</h3>
+        <div class="price">Custom<span>/quote</span></div>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> Everything in Professional</li>
+          <li><i class="fas fa-check"></i> Custom Solutions</li>
+          <li><i class="fas fa-check"></i> Priority Support</li>
+          <li><i class="fas fa-check"></i> Dedicated Team</li>
+          <li><i class="fas fa-check"></i> Ongoing Maintenance</li>
+          <li><i class="fas fa-check"></i> 24/7 Monitoring</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Projects Section -->
+  <section id="projects" class="projects-section">
+    <h2 class="section-title">Our Projects</h2>
+    <div class="projects-container">
+      <div class="project-card fade-in">
+        <div class="project-img">
+          <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Aliyi Abdullahi Official">
+        </div>
+        <div class="project-info">
+          <h3>Aliyi Abdullahi Official</h3>
+          <p>Personal Portfolio Website</p>
+          <a href="https://aliyi01.github.io/Aliyi-Abdullahi-Official/" class="btn btn-primary">View Project</a>
+        </div>
+      </div>
+      
+      <div class="project-card fade-in">
+        <div class="project-img">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nasiol Cave">
+        </div>
+        <div class="project-info">
+          <h3>Nasiol Cave</h3>
+          <p>Tourism Website</p>
+          <a href="https://aliyi01.github.io/NasiolCaveOromia/" class="btn btn-primary">View Project</a>
+        </div>
+      </div>
+      
+      <div class="project-card fade-in">
+        <div class="project-img">
+          <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Fayda Learn">
+        </div>
+        <div class="project-info">
+          <h3>Fayda Learn</h3>
+          <p>Educational Platform</p>
+          <a href="https://faydalearn1.github.io/FaydaLearnCourse/" class="btn btn-primary">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials-section">
+    <h2 class="section-title">Client Testimonials</h2>
+    <div id="testimonials-slider">
+      <!-- React will render testimonials slider here -->
+    </div>
+  </section>
+  
+  <!-- Statistics Section -->
+  <section id="stats" class="stats-section">
+    <h2 class="section-title">Our Achievements</h2>
+    <div id="stats-container">
+      <!-- React will render statistics here -->
+    </div>
+  </section>
+  
+  <!-- Team Section -->
+  <section id="team" class="team-section">
+    <h2 class="section-title">Meet Our Team</h2>
+    <div class="team-container">
+      <div class="team-card fade-in">
+        <div class="team-img">
+          <img src="A.jpg" alt="Team Member">
+        </div>
+        <h4>Aliyi Abdullahi</h4>
+        <p class="role">CEO & Founder</p>
+        <p>5+ years of experience in web development and digital solutions. Passionate about creating innovative tech solutions.</p>
+      </div>
+      
+      <div class="team-card fade-in">
+        <div class="team-img">
+          <img src="https://i.pravatar.cc/300?img=11" alt="Team Member">
+        </div>
+        <h4>Yasin Abduraman</h4>
+        <p class="role">UI/UX Designer</p>
+        <p>Specialized in creating intuitive and beautiful user interfaces with 8 years of design experience.</p>
+      </div>
+      
+      <div class="team-card fade-in">
+        <div class="team-img">
+          <img src="https://i.pravatar.cc/300?img=12" alt="Team Member">
+        </div>
+        <h4>Chala Aliyi</h4>
+        <p class="role">Mobile Developer</p>
+        <p>Expert in React Native and Flutter for cross-platform apps with 6 years of mobile development experience.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Skills Section -->
+  <section class="skills-section">
+    <h2 class="section-title">Technologies We Use</h2>
+    <div class="skills-container">
+      <div class="skill-item fade-in">
+        <i class="fab fa-html5"></i>
+        <h4>HTML5</h4>
+      </div>
+      
+      <div class="skill-item fade-in">
+        <i class="fab fa-css3-alt"></i>
+        <h4>CSS3</h4>
+      </div>
+      
+      <div class="skill-item fade-in">
+        <i class="fab fa-js"></i>
+        <h4>JavaScript</h4>
+      </div>
+      
+      <div class="skill-item fade-in">
+        <i class="fab fa-react"></i>
+        <h4>React</h4>
+      </div>
+      
+      <div class="skill-item fade-in">
+        <i class="fab fa-node-js"></i>
+        <h4>Node.js</h4>
+      </div>
+      
+      <div class="skill-item fade-in">
+        <i class="fab fa-python"></i>
+        <h4>Python</h4>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-container">
+      <div class="contact-info fade-in">
+        <h3>Contact Information</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Addis Ababa, Ethiopia</p>
+        <p><i class="fas fa-phone"></i> +251 993004779</p>
+        <p><i class="fas fa-envelope"></i> boruftech@gmail.com</p>
+        
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com" target="_blank" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      
+      <form class="contact-form fade-in" id="contactForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required>
+          <div class="error-message" id="nameError">Please enter your name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+          <div class="error-message" id="emailError">Please enter a valid email</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="service">Service Interested In</label>
+          <select id="service" name="service">
+            <option value="">Select a service</option>
+            <option value="web">Web Development</option>
+            <option value="mobile">Mobile App</option>
+            <option value="design">UI/UX Design</option>
+            <option value="marketing">Digital Marketing</option>
+            <option value="consulting">Consulting</option>
+            <option value="tech-edu">Technology Education</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <div class="error-message" id="messageError">Please enter your message</div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Newsletter -->
+  <div class="newsletter">
+    <h2>Subscribe to Our Newsletter</h2>
+    <p>Get the latest updates on our services, projects, and tech insights. No spam, unsubscribe anytime.</p>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" placeholder="Enter your email" required>
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <img src="Logo.png" alt="BorufTech Logo" width="150">
+        <p>Transforming businesses through innovative digital solutions since 2020. We bring your digital vision to life.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="#about"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="#tech-education"><i class="fas fa-chevron-right"></i> Tech Education</a></li>
+          <li><a href="#projects"><i class="fas fa-chevron-right"></i> Projects</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Services</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Web Development</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Mobile Apps</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Digital Marketing</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Cloud Solutions</a></li>
+          <li><a href="#tech-education"><i class="fas fa-chevron-right"></i> Technology Education</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-envelope"></i> boruftech@gmail.com</p>
+        <p><i class="fas fa-phone"></i> +251 993004779</p>
+        <p><i class="fas fa-map-marker-alt"></i> Oromia Region, Ethiopia</p>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; 2025 BorufTech. All rights reserved. | Designed with <i class="fas fa-heart"></i> by BorufTech Team</p>
+    </div>
+  </footer>
+  
+  <!-- Scroll to Top -->
+  <div class="to-top" id="toTop">
+    <i class="fas fa-chevron-up"></i>
+  </div>
+  
+  <!-- AI Chatbot -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <h3><i class="fas fa-robot"></i> BorufTech Assistant</h3>
+        <button class="chatbot-close" id="chatbotClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot">
+          Hello! I'm BorufTech AI Assistant. How can I help you today? 😊
+          <div class="message-time">Just now</div>
+        </div>
+        <div class="message bot">
+          You can ask me about:
+          <ul style="margin-top: 8px; padding-left: 20px;">
+            <li>Our services</li>
+            <li>Pricing information</li>
+            <li>Technology education</li>
+            <li>Project examples</li>
+            <li>Contact details</li>
+            <li>Or anything else!</li>
+          </ul>
+          <div class="message-time">Just now</div>
+        </div>
+      </div>
+      <div class="quick-replies" id="quickReplies">
+        <div class="quick-reply" data-question="What services do you offer?">Services</div>
+        <div class="quick-reply" data-question="How much does a website cost?">Pricing</div>
+        <div class="quick-reply" data-question="What is React.js?">React.js</div>
+        <div class="quick-reply" data-question="Python programming">Python</div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Type your question here...">
+        <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+    <div class="chatbot-toggle" id="chatbotToggle">
+      <i class="fas fa-comments"></i>
+      <div class="notification-badge" id="notificationBadge">1</div>
+    </div>
+  </div>
+  
+  <!-- React Components Script -->
+  <script type="text/babel">
+    // React Component for Interactive Service Cards
+    const ServiceCard = ({ service }) => {
+      const [showDetails, setShowDetails] = React.useState(false);
+      
+      return (
+        <div className="service-card fade-in">
+          <i className={service.icon}></i>
+          <h3>{service.title}</h3>
+          <p>{service.description}</p>
+          <button 
+            className="service-toggle" 
+            onClick={() => setShowDetails(!showDetails)}
+          >
+            <i className={showDetails ? 'fas fa-chevron-up' : 'fas fa-chevron-down'}></i>
+            {showDetails ? 'Show Less' : 'Learn More'}
+          </button>
+          <div className={`service-details ${showDetails ? 'active' : ''}`}>
+            <p>{service.details}</p>
+            <ul>
+              {service.features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    };
+    
+    // React Component for Testimonials Slider
+    const TestimonialSlider = () => {
+      const [currentIndex, setCurrentIndex] = React.useState(0);
+      
+      const testimonials = [
+        {
+          text: "BorufTech transformed our online presence completely. Their team delivered beyond our expectations with a website that increased our conversions by 40%.",
+          author: "John Smith",
+          role: "CEO, TechCorp Inc."
+        },
+        {
+          text: "Working with BorufTech was a game-changer for our business. Their mobile app solution streamlined our operations and improved customer satisfaction.",
+          author: "Maria Rodriguez",
+          role: "Operations Manager, RetailPlus"
+        },
+        {
+          text: "The digital marketing strategy developed by BorufTech doubled our online leads in just 3 months. Highly recommended!",
+          author: "David Kim",
+          role: "Marketing Director, GrowthLabs"
+        },
+        {
+          text: "Outstanding cloud migration service. They made the transition seamless with zero downtime for our critical applications.",
+          author: "Sarah Williams",
+          role: "CTO, DataSecure Inc."
+        }
+      ];
+      
+      const nextSlide = () => {
+        setCurrentIndex((prevIndex) => 
+          prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+        );
+      };
+      
+      const prevSlide = () => {
+        setCurrentIndex((prevIndex) => 
+          prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+        );
+      };
+      
+      const goToSlide = (index) => {
+        setCurrentIndex(index);
+      };
+      
+      React.useEffect(() => {
+        const interval = setInterval(() => {
+          nextSlide();
+        }, 5000);
+        
+        return () => clearInterval(interval);
+      }, [currentIndex]);
+      
+      return (
+        <div className="testimonials-slider">
+          <div className="testimonial-card">
+            <div className="testimonial-content">
+              <p className="testimonial-text">"{testimonials[currentIndex].text}"</p>
+              <div>
+                <p className="testimonial-author">{testimonials[currentIndex].author}</p>
+                <p className="testimonial-role">{testimonials[currentIndex].role}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="slider-controls">
+            <button className="slider-btn" onClick={prevSlide}>
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            
+            <div className="slider-dots">
+              {testimonials.map((_, index) => (
+                <div
+                  key={index}
+                  className={`slider-dot ${index === currentIndex ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                ></div>
+              ))}
+            </div>
+            
+            <button className="slider-btn" onClick={nextSlide}>
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      );
+    };
+    
+    // React Component for Animated Statistics
+    const StatCard = ({ stat }) => {
+      const [count, setCount] = React.useState(0);
+      
+      React.useEffect(() => {
+        const increment = stat.value / 50;
+        const timer = setInterval(() => {
+          setCount(prevCount => {
+            if (prevCount < stat.value) {
+              return Math.min(prevCount + increment, stat.value);
+            }
+            clearInterval(timer);
+            return stat.value;
+          });
+        }, 30);
+        
+        return () => clearInterval(timer);
+      }, [stat.value]);
+      
+      return (
+        <div className="stat-card fade-in">
+          <div className="stat-number">
+            {stat.value > 1000 ? `${(count/1000).toFixed(1)}k` : Math.floor(count)}
+            {stat.plus && count >= stat.value ? '+' : ''}
+          </div>
+          <div className="stat-label">{stat.label}</div>
+        </div>
+      );
+    };
+    
+    // React App Component
+    const ReactApp = () => {
+      const services = [
+        {
+          icon: "fas fa-code",
+          title: "Web Development",
+          description: "Custom, responsive websites built with modern technologies for optimal performance and user experience.",
+          details: "We create dynamic, scalable web applications using the latest frameworks and technologies to ensure your website stands out in today's competitive market.",
+          features: ["React & Vue.js Development", "Node.js Backend", "Responsive Design", "Performance Optimization", "API Integration"]
+        },
+        {
+          icon: "fas fa-mobile-alt",
+          title: "Mobile Apps",
+          description: "Native and cross-platform mobile applications for iOS and Android with seamless user interfaces.",
+          details: "Our mobile development team creates intuitive, high-performance applications that provide exceptional user experiences across all devices.",
+          features: ["iOS & Android Development", "React Native Apps", "UI/UX Design", "App Store Optimization", "Push Notifications"]
+        },
+        {
+          icon: "fas fa-paint-brush",
+          title: "UI/UX Design",
+          description: "User-centered design solutions that enhance engagement and drive conversions.",
+          details: "We combine aesthetics with functionality to create intuitive user interfaces that improve user satisfaction and business outcomes.",
+          features: ["User Research", "Wireframing", "Prototyping", "Usability Testing", "Design Systems"]
+        },
+        {
+          icon: "fas fa-chart-line",
+          title: "Digital Marketing",
+          description: "Comprehensive digital marketing strategies to boost your online presence and reach.",
+          details: "Our data-driven marketing strategies help businesses grow their online visibility, generate leads, and increase revenue.",
+          features: ["SEO Optimization", "Social Media Marketing", "Content Strategy", "Analytics & Reporting", "PPC Campaigns"]
+        },
+        {
+          icon: "fas fa-cloud",
+          title: "Cloud Solutions",
+          description: "Scalable cloud infrastructure and migration services for businesses of all sizes.",
+          details: "We help businesses leverage cloud technology to improve scalability, security, and operational efficiency.",
+          features: ["AWS & Azure Solutions", "Cloud Migration", "DevOps Implementation", "24/7 Monitoring", "Cost Optimization"]
+        },
+        {
+          icon: "fas fa-shield-alt",
+          title: "Cyber Security",
+          description: "Protect your digital assets with our comprehensive security solutions and monitoring.",
+          details: "Our security experts implement robust protection measures to safeguard your business from evolving cyber threats.",
+          features: ["Security Audits", "Vulnerability Testing", "Data Encryption", "Incident Response", "Compliance"]
+        }
+      ];
+      
+      const stats = [
+        { value: 150, label: "Projects Completed", plus: true },
+        { value: 50, label: "Happy Clients", plus: true },
+        { value: 5, label: "Years Experience", plus: false },
+        { value: 98, label: "Satisfaction Rate", plus: true }
+      ];
+      
+      return (
+        <React.Fragment>
+          {/* Render Services */}
+          {services.map((service, index) => (
+            <ServiceCard key={index} service={service} />
+          ))}
+          
+          {/* Render Testimonials Slider */}
+          <TestimonialSlider />
+          
+          {/* Render Statistics */}
+          {stats.map((stat, index) => (
+            <StatCard key={index} stat={stat} />
+          ))}
+        </React.Fragment>
+      );
+    };
+    
+    // Render React Components
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render Services
+      const servicesContainer = document.getElementById('services-container');
+      if (servicesContainer) {
+        const servicesRoot = ReactDOM.createRoot(servicesContainer);
+        servicesRoot.render(<ReactApp />);
+      }
+      
+      // Render Testimonials Slider
+      const testimonialsContainer = document.getElementById('testimonials-slider');
+      if (testimonialsContainer) {
+        const testimonialsRoot = ReactDOM.createRoot(testimonialsContainer);
+        testimonialsRoot.render(<TestimonialSlider />);
+      }
+      
+      // Render Statistics
+      const statsContainer = document.getElementById('stats-container');
+      if (statsContainer) {
+        statsContainer.className = 'stats-container';
+        const statsRoot = ReactDOM.createRoot(statsContainer);
+        statsRoot.render(<ReactApp />);
+      }
+    });
+  </script>
+  
+  <!-- Main JavaScript -->
+  <script>
+    // ========== GLOBAL VARIABLES ==========
+    let pyodide = null;
+    let isPythonLoaded = false;
+    
+    // ========== TECH EDUCATION FUNCTIONS ==========
+    
+    // Toggle details sections
+    function toggleDetails(tech) {
+      const detailsElement = document.getElementById(`${tech}-details`);
+      const button = document.querySelector(`#${tech}-card .tech-toggle i`);
+      
+      detailsElement.classList.toggle('active');
+      
+      if (detailsElement.classList.contains('active')) {
+        button.className = 'fas fa-times';
+        // Smooth scroll to the card
+        document.getElementById(`${tech}-card`).scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      } else {
+        button.className = 'fas fa-book';
+      }
+    }
+    
+    // Run HTML Example
+    function runHTMLExample() {
+      const htmlCode = document.getElementById('html-code').textContent;
+      const outputArea = document.getElementById('html-preview');
+      const mainOutput = document.getElementById('html-output');
+      
+      mainOutput.innerHTML = '<p>Running HTML example...</p>';
+      
+      // Create a temporary iframe to run HTML
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '100%';
+      iframe.style.height = '400px';
+      iframe.style.border = 'none';
+      iframe.style.borderRadius = '8px';
+      iframe.style.marginTop = '10px';
+      
+      // Write HTML to iframe
+      setTimeout(() => {
+        iframe.srcdoc = htmlCode;
+        outputArea.innerHTML = '';
+        outputArea.appendChild(iframe);
+        mainOutput.classList.add('success');
+        mainOutput.innerHTML = '<p>✅ HTML example running in preview below:</p>';
+      }, 500);
+    }
+    
+    // Run CSS Example
+    function runCSSExample() {
+      const cssCode = document.getElementById('css-code').textContent;
+      const outputArea = document.getElementById('css-preview');
+      const mainOutput = document.getElementById('css-output');
+      
+      mainOutput.innerHTML = '<p>Running CSS example...</p>';
+      
+      // Create demo HTML with the CSS
+      const demoHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>${cssCode}</style>
+        </head>
+        <body style="padding: 20px; font-family: Arial, sans-serif;">
+            <h1>CSS3 Features Demo</h1>
+            
+            <div class="text-effects">CSS3 is Awesome!</div>
+            
+            <h3>Flexbox Layout</h3>
+            <div class="flex-container">
+                <div class="flex-item">Item 1</div>
+                <div class="flex-item">Item 2</div>
+                <div class="flex-item">Item 3</div>
+                <div class="flex-item">Item 4</div>
+            </div>
+            
+            <h3>CSS Grid Layout</h3>
+            <div class="grid-container">
+                <div class="grid-item">1</div>
+                <div class="grid-item">2</div>
+                <div class="grid-item">3</div>
+                <div class="grid-item">4</div>
+                <div class="grid-item">5</div>
+                <div class="grid-item">6</div>
+            </div>
+            
+            <h3>Animations</h3>
+            <div class="animated-box">Animated Element</div>
+            
+            <h3>Transform on Hover</h3>
+            <div class="transform-demo">Hover Me</div>
+            
+            <h3>Button with Hover Effects</h3>
+            <button class="css-button">Hover Me</button>
+            <button class="css-button">Click Me</button>
+            
+            <script>
+                // Add hover effect for transform demo
+                document.querySelector('.transform-demo').addEventListener('mouseenter', function() {
+                    this.textContent = 'Rotating!';
+                });
+                document.querySelector('.transform-demo').addEventListener('mouseleave', function() {
+                    this.textContent = 'Hover Me';
+                });
+            <\/script>
+        </body>
+        </html>
+      `;
+      
+      // Create iframe for CSS demo
+      setTimeout(() => {
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '600px';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '8px';
+        iframe.style.marginTop = '10px';
+        iframe.srcdoc = demoHTML;
+        
+        outputArea.innerHTML = '';
+        outputArea.appendChild(iframe);
+        mainOutput.classList.add('success');
+        mainOutput.innerHTML = '<p>✅ CSS3 example running in preview below. Try hovering over elements!</p>';
+      }, 500);
+    }
+    
+    // Run JavaScript Example
+    function runJSExample() {
+      const jsCode = document.getElementById('js-code').textContent;
+      const outputArea = document.getElementById('js-preview');
+      const mainOutput = document.getElementById('js-output');
+      
+      mainOutput.innerHTML = '<p>Running JavaScript example...</p>';
+      
+      try {
+        // Extract the runExamples function from the code
+        const codeWithRun = jsCode + '\n\n// Run examples\nrunExamples();';
+        
+        // Create a sandboxed execution environment
+        const sandbox = {
+          console: {
+            log: (...args) => {
+              outputArea.innerHTML += args.join(' ') + '<br>';
+            }
+          },
+          document: {
+            getElementById: (id) => {
+              if (id === 'js-preview') {
+                return {
+                  innerHTML: outputArea.innerHTML
+                };
+              }
+              return null;
+            }
+          },
+          JSON: JSON,
+          Math: Math,
+          Date: Date
+        };
+        
+        // Create the runExamples function in sandbox
+        sandbox.runExamples = new Function('return ' + jsCode.split('function runExamples()')[1].split('}')[0] + '}')();
+        
+        // Execute
+        const result = sandbox.runExamples();
+        outputArea.innerHTML = result;
+        
+        mainOutput.classList.add('success');
+        mainOutput.innerHTML = '<p>✅ JavaScript ES6+ example executed successfully!</p>';
+        
+      } catch (error) {
+        outputArea.innerHTML = `Error: ${error.message}`;
+        mainOutput.classList.add('error');
+        mainOutput.innerHTML = '<p>❌ Error running JavaScript example. Check console for details.</p>';
+        console.error('JavaScript execution error:', error);
+      }
+    }
+    
+    // Run React Example
+    function runReactExample() {
+      const reactCode = document.getElementById('react-code').textContent;
+      const outputArea = document.getElementById('react-output');
+      
+      outputArea.innerHTML = '<p>Loading React components...</p>';
+      
+      // Simple React demo without full compilation
+      setTimeout(() => {
+        outputArea.innerHTML = `
+          <div style="text-align: center; padding: 20px;">
+            <h3>React Components Demo</h3>
+            <p>React components require full compilation. Here's a preview:</p>
+            
+            <div style="display: grid; gap: 20px; margin-top: 20px;">
+              <div style="background: rgba(97, 218, 251, 0.2); padding: 20px; border-radius: 10px;">
+                <h4>Counter Component</h4>
+                <p>Stateful component with useState and useEffect hooks</p>
+                <button style="padding: 10px 20px; margin: 5px;">Start Counter</button>
+                <p>Count: 0</p>
+              </div>
+              
+              <div style="background: rgba(97, 218, 251, 0.2); padding: 20px; border-radius: 10px;">
+                <h4>Todo List Component</h4>
+                <p>Manages state with complex array operations</p>
+                <input type="text" placeholder="Add todo..." style="padding: 8px; margin: 5px;">
+                <button style="padding: 8px 15px;">Add</button>
+                <ul style="text-align: left; margin-top: 10px;">
+                  <li>Learn React ✓</li>
+                  <li>Build a project</li>
+                  <li>Master Hooks</li>
+                </ul>
+              </div>
+              
+              <div style="background: rgba(97, 218, 251, 0.2); padding: 20px; border-radius: 10px;">
+                <h4>User Profile Component</h4>
+                <p>Form handling and theme toggling</p>
+                <p><strong>Name:</strong> John Doe</p>
+                <p><strong>Email:</strong> john@example.com</p>
+                <p><strong>Role:</strong> Developer</p>
+                <button style="padding: 8px 15px; margin: 5px;">Edit Profile</button>
+                <button style="padding: 8px 15px; margin: 5px;">Toggle Theme</button>
+              </div>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9em;">
+              <em>Note: Full React execution requires build tools. This is a visual preview.</em>
+            </p>
+          </div>
+        `;
+      }, 1000);
+    }
+    
+    // Initialize Pyodide (Python in browser)
+    async function initPyodide() {
+      const pythonButton = document.getElementById('python-run-btn');
+      const statusText = pythonButton.querySelector('span') || pythonButton;
+      
+      try {
+        statusText.textContent = 'Loading Python...';
+        pythonButton.disabled = true;
+        
+        // Load Pyodide
+        pyodide = await loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+        });
+        
+        // Load micropip for additional packages
+        await pyodide.loadPackage("micropip");
+        
+        isPythonLoaded = true;
+        statusText.textContent = 'Run Python Code';
+        pythonButton.disabled = false;
+        
+        console.log('Pyodide loaded successfully');
+        
+      } catch (error) {
+        console.error('Failed to load Pyodide:', error);
+        statusText.textContent = 'Python Load Failed';
+        pythonButton.disabled = true;
+      }
+    }
+    
+    // Run Python Example
+    async function runPythonExample() {
+      if (!pyodide || !isPythonLoaded) {
+        await initPyodide();
+        if (!isPythonLoaded) {
+          alert('Python runtime failed to load. Please refresh the page and try again.');
+          return;
+        }
+      }
+      
+      const pythonCode = document.getElementById('python-code').textContent;
+      const outputArea = document.getElementById('python-result');
+      const mainOutput = document.getElementById('python-output');
+      const button = document.getElementById('python-run-btn');
+      
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+      button.disabled = true;
+      
+      mainOutput.innerHTML = '<p>Executing Python code...</p>';
+      outputArea.innerHTML = '';
+      
+      try {
+        // Run Python code
+        await pyodide.runPythonAsync(`
+import sys
+import io
+
+# Capture output
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+
+try:
+${pythonCode.replace(/\n/g, '\n    ')}
+except Exception as e:
+    print(f"Error: {type(e).__name__}: {e}")
+
+# Get the output
+output = sys.stdout.getvalue()
+error_output = sys.stderr.getvalue()
+
+if error_output:
+    print("\\nStderr:", error_output)
+`);
+        
+        // Get the output
+        const output = pyodide.runPython("output");
+        const errorOutput = pyodide.runPython("error_output");
+        
+        // Display results
+        if (errorOutput && errorOutput.trim()) {
+          outputArea.innerHTML = `<pre style="color: #f44336;">${errorOutput}</pre>`;
+          mainOutput.classList.add('error');
+          mainOutput.innerHTML = '<p>❌ Python execution completed with errors:</p>';
+        } else {
+          outputArea.innerHTML = `<pre style="color: #4CAF50;">${output}</pre>`;
+          mainOutput.classList.add('success');
+          mainOutput.innerHTML = '<p>✅ Python code executed successfully!</p>';
+        }
+        
+      } catch (error) {
+        console.error('Python execution error:', error);
+        outputArea.innerHTML = `<pre style="color: #f44336;">Error: ${error.message}</pre>`;
+        mainOutput.classList.add('error');
+        mainOutput.innerHTML = '<p>❌ Error executing Python code:</p>';
+      } finally {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }
+    }
+    
+    // ========== WEBSITE FUNCTIONALITY ==========
+    
+    // Loading Animation
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        document.querySelector('.hero-content').style.opacity = '1';
+      }, 1200);
+    });
+    
+    // Mobile Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const navOverlay = document.getElementById('navOverlay');
+    const body = document.body;
+    
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    });
+    
+    // Close mobile menu when clicking on overlay
+    navOverlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+      navOverlay.classList.remove('active');
+      body.style.overflow = '';
+    });
+    
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.style.overflow = '';
+      });
+    });
+    
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      
+      if (document.body.classList.contains('light')) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'light');
+        themeToggle.style.background = 'rgba(255, 193, 7, 0.9)';
+      } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.style.background = 'rgba(0, 123, 255, 0.9)';
+      }
+    });
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      themeToggle.style.background = 'rgba(255, 193, 7, 0.9)';
+    }
+    
+    // Scroll to Top
+    const toTop = document.getElementById('toTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        toTop.classList.add('visible');
+      } else {
+        toTop.classList.remove('visible');
+      }
+      
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+    
+    toTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Smooth Scrolling for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 100,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Active Nav Link on Scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+    
+    // Form Validation
+    const contactForm = document.getElementById('contactForm');
+    
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let isValid = true;
+      
+      // Name validation
+      const nameInput = document.getElementById('name');
+      const nameError = document.getElementById('nameError');
+      if (nameInput.value.trim() === '') {
+        nameInput.classList.add('error');
+        nameError.style.display = 'block';
+        isValid = false;
+      } else {
+        nameInput.classList.remove('error');
+        nameError.style.display = 'none';
+      }
+      
+      // Email validation
+      const emailInput = document.getElementById('email');
+      const emailError = document.getElementById('emailError');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value)) {
+        emailInput.classList.add('error');
+        emailError.style.display = 'block';
+        isValid = false;
+      } else {
+        emailInput.classList.remove('error');
+        emailError.style.display = 'none';
+      }
+      
+      // Message validation
+      const messageInput = document.getElementById('message');
+      const messageError = document.getElementById('messageError');
+      if (messageInput.value.trim() === '') {
+        messageInput.classList.add('error');
+        messageError.style.display = 'block';
+        isValid = false;
+      } else {
+        messageInput.classList.remove('error');
+        messageError.style.display = 'none';
+      }
+      
+      if (isValid) {
+        // Simulate form submission
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+        
+        setTimeout(() => {
+          // Show success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'success-message';
+          successDiv.innerHTML = `
+            <div style="background: rgba(40, 167, 69, 0.9); color: white; padding: 20px; border-radius: 12px; margin-top: 20px; text-align: center;">
+              <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+              <h3 style="margin-bottom: 10px;">Message Sent Successfully!</h3>
+              <p>Thank you for contacting BorufTech. We will get back to you within 24 hours.</p>
+            </div>
+          `;
+          this.parentNode.insertBefore(successDiv, this.nextSibling);
+          
+          // Reset form
+          contactForm.reset();
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+          
+          // Remove success message after 5 seconds
+          setTimeout(() => {
+            successDiv.remove();
+          }, 5000);
+        }, 1500);
+      }
+    });
+    
+    // Newsletter Form
+    const newsletterForm = document.getElementById('newsletterForm');
+    
+    newsletterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      
+      if (email) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+        submitBtn.disabled = true;
+        
+        setTimeout(() => {
+          // Show success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'newsletter-success';
+          successDiv.innerHTML = `
+            <div style="background: rgba(0, 123, 255, 0.9); color: white; padding: 15px; border-radius: 12px; margin-top: 20px; text-align: center;">
+              <i class="fas fa-check-circle"></i> Thank you for subscribing to our newsletter!
+            </div>
+          `;
+          this.parentNode.insertBefore(successDiv, this.nextSibling);
+          
+          this.reset();
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+          
+          // Remove success message after 5 seconds
+          setTimeout(() => {
+            successDiv.remove();
+          }, 5000);
+        }, 1000);
+      }
+    });
+    
+    // Fade-in Animation on Scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all elements with .fade-in class
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // ========== AI CHATBOT ==========
+    
+    class ChatbotAI {
+      constructor() {
+        this.responses = {
+          greetings: [
+            "Hello! How can I assist you today? 😊",
+            "Hi there! Welcome to BorufTech. What can I help you with?",
+            "Greetings! I'm here to help you learn about BorufTech's services and technologies."
+          ],
+          services: "We offer a wide range of services including: \n• Web Development \n• Mobile Apps \n• UI/UX Design \n• Digital Marketing \n• Cloud Solutions \n• Cyber Security \n• Technology Education \n\nWhich service are you interested in?",
+          pricing: "Our pricing starts at $499 for basic websites and goes up based on complexity. \n\n• Starter: $499/project \n• Professional: $1,299/project \n• Enterprise: Custom quotes \n\nWould you like more details about a specific plan?",
+          portfolio: "You can view our portfolio projects here: \n1. Aliyi Abdullahi Official - Personal Portfolio \n2. Nasiol Cave - Tourism Website \n3. Fayda Learn - Educational Platform \n\nVisit our projects section to see more!",
+          contact: "You can contact us via: \n📧 Email: boruftech@gmail.com \n📞 Phone: +251 993004779 \n📍 Location: Addis Ababa, Ethiopia \n\nWould you like to send a message directly?",
+          html5: "HTML5 is the latest version of HyperText Markup Language. Key features include: \n• Semantic elements \n• Multimedia support \n• Canvas graphics \n• Local storage \n• Improved forms \n\nWould you like to see an HTML5 example?",
+          css: "CSS3 is the latest standard for Cascading Style Sheets. Features include: \n• Flexbox and Grid layouts \n• Animations and transitions \n• CSS variables \n• Responsive design \n• Custom properties \n\nWould you like to see a CSS3 example?",
+          javascript: "JavaScript is a programming language for web interactivity. Features include: \n• ES6+ syntax \n• DOM manipulation \n• Async programming \n• Event handling \n• Modern frameworks \n\nWould you like to see a JavaScript example?",
+          react: "React.js is a JavaScript library for building user interfaces. Features include: \n• Component-based architecture \n• Virtual DOM \n• Hooks \n• JSX syntax \n• State management \n\nWould you like to see a React.js example?",
+          python: "Python is a versatile programming language. Applications include: \n• Web development \n• Data science \n• Machine learning \n• Automation \n• Scientific computing \n\nWould you like to see a Python example?",
+          default: "I'm not sure I understand. Could you rephrase your question? You can ask about our services, pricing, portfolio, technology education, or contact information."
+        };
+      }
+      
+      getResponse(userInput) {
+        const input = userInput.toLowerCase();
+        
+        if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+          return this.getRandomResponse('greetings');
+        } else if (input.includes('service') || input.includes('what do you do')) {
+          return this.responses.services;
+        } else if (input.includes('price') || input.includes('cost') || input.includes('how much')) {
+          return this.responses.pricing;
+        } else if (input.includes('portfolio') || input.includes('project') || input.includes('example')) {
+          return this.responses.portfolio;
+        } else if (input.includes('contact') || input.includes('email') || input.includes('phone')) {
+          return this.responses.contact;
+        } else if (input.includes('html') || input.includes('html5')) {
+          return this.responses.html5;
+        } else if (input.includes('css') || input.includes('css3')) {
+          return this.responses.css;
+        } else if (input.includes('javascript') || input.includes('js')) {
+          return this.responses.javascript;
+        } else if (input.includes('react')) {
+          return this.responses.react;
+        } else if (input.includes('python')) {
+          return this.responses.python;
+        } else {
+          return this.responses.default;
+        }
+      }
+      
+      getRandomResponse(type) {
+        const responses = this.responses[type];
+        if (Array.isArray(responses)) {
+          return responses[Math.floor(Math.random() * responses.length)];
+        }
+        return responses;
+      }
+    }
+    
+    // Initialize chatbot
+    const chatbotAI = new ChatbotAI();
+    const chatbotToggle = document.getElementById('chatbotToggle');
+    const chatbotWindow = document.getElementById('chatbotWindow');
+    const chatbotClose = document.getElementById('chatbotClose');
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+    const quickReplies = document.querySelectorAll('.quick-reply');
+    const notificationBadge = document.getElementById('notificationBadge');
+    
+    let isChatbotOpen = false;
+    let unreadMessages = 1;
+    
+    // Toggle chatbot window
+    chatbotToggle.addEventListener('click', () => {
+      if (!isChatbotOpen) {
+        chatbotWindow.classList.add('active');
+        isChatbotOpen = true;
+        unreadMessages = 0;
+        updateNotificationBadge();
+        chatbotInput.focus();
+      } else {
+        chatbotWindow.classList.remove('active');
+        isChatbotOpen = false;
+      }
+    });
+    
+    // Close chatbot
+    chatbotClose.addEventListener('click', () => {
+      chatbotWindow.classList.remove('active');
+      isChatbotOpen = false;
+    });
+    
+    // Send message
+    function sendMessage() {
+      const message = chatbotInput.value.trim();
+      if (message) {
+        addMessage(message, 'user');
+        chatbotInput.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Get AI response after delay
+        setTimeout(() => {
+          removeTypingIndicator();
+          const response = chatbotAI.getResponse(message);
+          addMessage(response, 'bot');
+        }, 1000 + Math.random() * 1000);
+      }
+    }
+    
+    chatbotSend.addEventListener('click', sendMessage);
+    
+    chatbotInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // Quick replies
+    quickReplies.forEach(reply => {
+      reply.addEventListener('click', () => {
+        const question = reply.getAttribute('data-question');
+        addMessage(question, 'user');
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Get AI response after delay
+        setTimeout(() => {
+          removeTypingIndicator();
+          const response = chatbotAI.getResponse(question);
+          addMessage(response, 'bot');
+        }, 800);
+      });
+    });
+    
+    // Add message to chat
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      messageDiv.innerHTML = `${text}<div class="message-time">${time}</div>`;
+      
+      chatbotMessages.appendChild(messageDiv);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      
+      // Update notification badge if chat is closed
+      if (sender === 'bot' && !isChatbotOpen) {
+        unreadMessages++;
+        updateNotificationBadge();
+      }
+    }
+    
+    // Show typing indicator
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'typing-indicator';
+      typingDiv.id = 'typingIndicator';
+      typingDiv.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      chatbotMessages.appendChild(typingDiv);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+    
+    // Remove typing indicator
+    function removeTypingIndicator() {
+      const typingIndicator = document.getElementById('typingIndicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+    
+    // Update notification badge
+    function updateNotificationBadge() {
+      if (unreadMessages > 0) {
+        notificationBadge.textContent = unreadMessages;
+        notificationBadge.style.display = 'flex';
+        notificationBadge.style.animation = 'pulse-badge 1.5s infinite';
+      } else {
+        notificationBadge.style.display = 'none';
+      }
+    }
+    
+    // Initialize notification badge
+    updateNotificationBadge();
+    
+    // ========== INITIALIZATION ==========
+    
+    // Initialize Pyodide when page loads
+    window.addEventListener('load', async () => {
+      // Initialize Pyodide in background
+      setTimeout(initPyodide, 2000);
+      
+      // Add initial animations
+      const heroContent = document.querySelector('.hero-content');
+      heroContent.style.opacity = '0';
+      heroContent.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+        heroContent.style.opacity = '1';
+        heroContent.style.transform = 'translateY(0)';
+      }, 300);
+      
+      // Add hover effect to cards
+      const cards = document.querySelectorAll('.service-card, .pricing-card, .project-card, .team-card, .stat-card, .tech-card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-15px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+    });
+    
+    // Close chatbot when clicking outside
+    document.addEventListener('click', (e) => {
+      const chatbotContainer = document.getElementById('chatbotContainer');
+      if (isChatbotOpen && !chatbotContainer.contains(e.target) && !chatbotToggle.contains(e.target)) {
+        chatbotWindow.classList.remove('active');
+        isChatbotOpen = false;
+      }
+    });
+    
+    // Auto-open chatbot after delay
+    setTimeout(() => {
+      if (!isChatbotOpen && unreadMessages > 0) {
+        notificationBadge.style.display = 'flex';
+      }
+    }, 3000);
+    
+    console.log('BorufTech website initialized successfully!');
+  </script>
+</body>
+</html>

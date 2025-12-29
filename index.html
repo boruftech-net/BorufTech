@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+    
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1216,7 +1217,7 @@
             animation: none;
         }
         
-        /* Sponsors Admin Panel */
+        /* Sponsors Admin Panel - Hidden from public by default */
         .sponsors-admin {
             background-color: white;
             margin-top: 30px;
@@ -1224,6 +1225,11 @@
             border-radius: 10px;
             box-shadow: var(--shadow);
             animation: slideInUp 1s ease-out, subtleGlow 5s infinite alternate;
+            display: none; /* Hidden by default */
+        }
+        
+        .sponsors-admin.visible {
+            display: block;
         }
         
         @keyframes slideInUp {
@@ -1300,6 +1306,80 @@
             gap: 15px;
             justify-content: center;
             margin-top: 20px;
+        }
+        
+        /* Admin Login Modal */
+        .admin-login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .admin-login-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .admin-login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 400px;
+            width: 90%;
+            animation: slideInUp 0.5s ease-out;
+        }
+        
+        .admin-login-box h3 {
+            margin-bottom: 20px;
+            color: var(--sponsor-color);
+            text-align: center;
+        }
+        
+        .admin-login-box .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .admin-login-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        /* Admin Access Button */
+        .admin-access-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--sponsor-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .admin-access-btn:hover {
+            background-color: #7a1bd1;
+            transform: scale(1.1);
         }
         
         /* Footer */
@@ -1435,6 +1515,13 @@
             .tech-item, .value-card, .achievement-item, 
             .service-card, .project-card, .sponsor-card {
                 animation-duration: 10s !important;
+            }
+            
+            .admin-access-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
             }
         }
         
@@ -1622,7 +1709,7 @@
                 <!-- Sponsors will be populated by React -->
             </div>
             
-            <!-- Sponsors Admin Panel (Visible for demo purposes) -->
+            <!-- Sponsors Admin Panel (Hidden from public by default) -->
             <div class="sponsors-admin" id="sponsorsAdmin">
                 <h3><i class="fas fa-user-cog"></i> Sponsors Management Panel</h3>
                 <p style="text-align: center; margin-bottom: 25px;">Manually upload sponsors logo, name and description</p>
@@ -1674,6 +1761,9 @@
                         </button>
                         <button type="button" class="btn btn-secondary" id="resetFormBtn">
                             <i class="fas fa-redo"></i> Reset Form
+                        </button>
+                        <button type="button" class="btn" id="logoutAdminBtn" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
                 </div>
@@ -1818,6 +1908,44 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Admin Access Button -->
+    <button class="admin-access-btn" id="adminAccessBtn" title="Admin Access">
+        <i class="fas fa-user-shield"></i>
+    </button>
+    
+    <!-- Admin Login Modal -->
+    <div class="admin-login-modal" id="adminLoginModal">
+        <div class="admin-login-box">
+            <h3><i class="fas fa-user-shield"></i> Admin Login</h3>
+            <p style="text-align: center; margin-bottom: 20px;">Enter credentials to access sponsors management</p>
+            
+            <div class="form-group">
+                <label for="adminUsername">Username</label>
+                <input type="text" id="adminUsername" class="form-control" placeholder="Enter username">
+            </div>
+            
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" class="form-control" placeholder="Enter password">
+            </div>
+            
+            <div id="loginStatus" class="form-status" style="margin-bottom: 20px;"></div>
+            
+            <div class="admin-login-buttons">
+                <button type="button" class="btn btn-sponsor" id="loginAdminBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button type="button" class="btn" id="cancelLoginBtn">
+                    Cancel
+                </button>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; color: var(--gray-color); text-align: center;">
+                Demo credentials: admin / BorufTech2026
+            </p>
+        </div>
+    </div>
     
     <!-- React Components -->
     <script type="text/babel">
@@ -2452,7 +2580,138 @@
         const logoPreview = document.getElementById('logoPreview');
         const addSponsorBtn = document.getElementById('addSponsorBtn');
         const resetFormBtn = document.getElementById('resetFormBtn');
+        const logoutAdminBtn = document.getElementById('logoutAdminBtn');
         const adminStatus = document.getElementById('adminStatus');
+        const sponsorsAdmin = document.getElementById('sponsorsAdmin');
+        
+        // Admin Login Functionality
+        const adminAccessBtn = document.getElementById('adminAccessBtn');
+        const adminLoginModal = document.getElementById('adminLoginModal');
+        const loginAdminBtn = document.getElementById('loginAdminBtn');
+        const cancelLoginBtn = document.getElementById('cancelLoginBtn');
+        const adminUsername = document.getElementById('adminUsername');
+        const adminPassword = document.getElementById('adminPassword');
+        const loginStatus = document.getElementById('loginStatus');
+        
+        // Check if user is already logged in
+        function checkAdminLogin() {
+            const isLoggedIn = localStorage.getItem('boruftech_admin_loggedin') === 'true';
+            if (isLoggedIn) {
+                showAdminPanel();
+            }
+        }
+        
+        // Show admin login modal
+        adminAccessBtn.addEventListener('click', function() {
+            // Check if already logged in
+            if (localStorage.getItem('boruftech_admin_loggedin') === 'true') {
+                showAdminPanel();
+                // Scroll to sponsors section
+                document.getElementById('sponsors').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                adminLoginModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+        
+        // Login button handler
+        loginAdminBtn.addEventListener('click', function() {
+            const username = adminUsername.value.trim();
+            const password = adminPassword.value.trim();
+            
+            // Demo credentials - in a real app, this would be validated against a backend
+            if (username === 'admin' && password === 'BorufTech2026') {
+                // Successful login
+                localStorage.setItem('boruftech_admin_loggedin', 'true');
+                localStorage.setItem('boruftech_admin_username', username);
+                
+                // Hide login modal
+                adminLoginModal.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                // Clear login form
+                adminUsername.value = '';
+                adminPassword.value = '';
+                
+                // Show admin panel
+                showAdminPanel();
+                
+                // Scroll to sponsors section
+                document.getElementById('sponsors').scrollIntoView({ behavior: 'smooth' });
+                
+                // Show success message
+                loginStatus.textContent = 'Login successful!';
+                loginStatus.className = 'form-status success';
+                loginStatus.style.display = 'block';
+            } else {
+                // Failed login
+                loginStatus.textContent = 'Invalid username or password. Please try again.';
+                loginStatus.className = 'form-status error';
+                loginStatus.style.display = 'block';
+                
+                // Shake animation for wrong credentials
+                adminLoginBox = document.querySelector('.admin-login-box');
+                adminLoginBox.style.animation = 'none';
+                setTimeout(() => {
+                    adminLoginBox.style.animation = 'shake 0.5s ease';
+                }, 10);
+                
+                // Clear password field
+                adminPassword.value = '';
+            }
+        });
+        
+        // Cancel login
+        cancelLoginBtn.addEventListener('click', function() {
+            adminLoginModal.classList.remove('active');
+            document.body.style.overflow = '';
+            adminUsername.value = '';
+            adminPassword.value = '';
+            loginStatus.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        adminLoginModal.addEventListener('click', function(e) {
+            if (e.target === adminLoginModal) {
+                adminLoginModal.classList.remove('active');
+                document.body.style.overflow = '';
+                adminUsername.value = '';
+                adminPassword.value = '';
+                loginStatus.style.display = 'none';
+            }
+        });
+        
+        // Logout button handler
+        logoutAdminBtn.addEventListener('click', function() {
+            localStorage.removeItem('boruftech_admin_loggedin');
+            localStorage.removeItem('boruftech_admin_username');
+            hideAdminPanel();
+        });
+        
+        // Function to show admin panel
+        function showAdminPanel() {
+            sponsorsAdmin.classList.add('visible');
+            logoutAdminBtn.style.display = 'block';
+            adminAccessBtn.innerHTML = '<i class="fas fa-user-check"></i>';
+            adminAccessBtn.title = 'Admin Mode Active';
+            
+            // Add shake animation to admin panel
+            sponsorsAdmin.style.animation = 'slideInUp 0.5s ease-out, subtleGlow 2s infinite alternate';
+        }
+        
+        // Function to hide admin panel
+        function hideAdminPanel() {
+            sponsorsAdmin.classList.remove('visible');
+            logoutAdminBtn.style.display = 'none';
+            adminAccessBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
+            adminAccessBtn.title = 'Admin Access';
+            
+            // Reset admin panel animation
+            sponsorsAdmin.style.animation = '';
+        }
+        
+        // Check admin login on page load
+        checkAdminLogin();
         
         // Upload area click handler
         uploadArea.addEventListener('click', function() {
@@ -2482,6 +2741,14 @@
         
         // Add sponsor button handler
         addSponsorBtn.addEventListener('click', function() {
+            // Check if user is logged in
+            if (localStorage.getItem('boruftech_admin_loggedin') !== 'true') {
+                adminStatus.textContent = 'Please login as admin to add sponsors.';
+                adminStatus.className = 'form-status error';
+                adminStatus.style.display = 'block';
+                return;
+            }
+            
             // Get form values
             const sponsorName = document.getElementById('sponsorName').value.trim();
             const sponsorCategory = document.getElementById('sponsorCategory').value;
@@ -2542,9 +2809,6 @@
                     // Reset form
                     resetForm();
                     
-                    // Scroll to the newly added sponsor
-                    document.getElementById('sponsors').scrollIntoView({ behavior: 'smooth' });
-                    
                     // Auto-hide success message after 5 seconds
                     setTimeout(() => {
                         adminStatus.style.display = 'none';
@@ -2596,6 +2860,17 @@
                 return false;
             }
         }
+        
+        // Add shake animation for login errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
         
         // Phone number click handler for mobile devices
         const phoneLink = document.querySelector('a[href^="tel:"]');
@@ -2685,8 +2960,7 @@
         }
     </script>
 </body>
-</html>    
-              
+</html>          
                   
                                           
     
